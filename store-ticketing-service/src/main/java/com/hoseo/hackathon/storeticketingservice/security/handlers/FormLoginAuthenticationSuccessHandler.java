@@ -30,6 +30,8 @@ public class FormLoginAuthenticationSuccessHandler implements AuthenticationSucc
             String generateToken = jwtFactory.generateToken((String)token.getPrincipal(), token.getAuthorities());   //MemberContext안에 있는 인증 결과 값 정보를 사용해 JWT 토큰 생성
             LoginDto loginDto = writeDTO(generateToken);//DTO에도 토큰 값 넣어주기
 
+            //TODO RefreshTOKEN
+
             //JSON형태로 response
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
