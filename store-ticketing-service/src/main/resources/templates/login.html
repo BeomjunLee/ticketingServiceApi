@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="front/css/style.css">
+  <script src="js/jquery-1.12.3.js"></script>
+  <script src="js/common.js"></script>
+ </HEAD>
+
+ <BODY>
+	<div id="wrap">
+		<header>
+			<h1>
+				<a href="main.html" target="" title="">
+					<img src="images/logo.png" alt="logo">
+				</a>
+			</h1>
+			
+			<ul class="menu01">
+				<li><a href="#" target="" title="">" ABOUT US "</a></li>
+				<li><a href="#" target="" title="">" 기부 사용 방법 "</a></li>
+				<li><a href="#" target="" title="">" 가게찾기 "</a></li>
+				<li><a href="#" target="" title="">" 나누다 "</a></li>
+			</ul>
+
+			<div class="topMenu">
+				<ul class="menu02">
+					<li><a href="#" target="" title=""><span>" 마이페이지 "</span></a>
+						<ul class="dept01" style="display:none;">
+							<li id="nop"><a href="#" target="" title="">회원정보</a></li>
+							<li id="nop"><a href="#" target="" title="">번호표</a></li>
+							<li id="nop"><a href="#" target="" title="">관리자메뉴</a></li>
+						</ul>
+					</li>
+					<li><a href="#" target="" title=""><span>" 로그인 "</span></a></li>
+				</ul>
+			</div>
+
+			<div class="area-dept01"></div>
+		</header>
+
+		<section>
+			<!-- wrapper -->
+			<div id="wrapper">
+
+				<!-- content-->
+				<div id="content">
+
+					<!-- ID -->
+					<div>
+						<h3 class="join_title">
+							<label for="id">아이디</label>
+						</h3>
+						<span class="box int_id">
+							<input type="text" id="id" class="int" maxlength="20">
+						</span>
+
+						<span class="box int_id">
+							<select id="mm" class="sel">
+								<option>직접선택</option>
+								<option value="01">naver.com</option>
+								<option value="02">gmail.com</option>
+								<option value="03">nate.com</option>
+							</select>
+						</span>
+
+						<span class="error_next_box"></span>
+					</div>
+
+					<!-- PW1 -->
+					<div>
+						<h3 class="join_title"><label for="pswd1">비밀번호</label></h3>
+						<span class="box int_pass">
+							<input type="text" id="pswd1" class="int" maxlength="20">
+							<span id="alertTxt">사용불가</span>
+							<img src="m_icon_pass.png" id="pswd1_img1" class="pswdImg">
+						</span>
+						<span class="error_next_box"></span>
+					</div>
+
+
+					<!-- JOIN BTN-->
+					<div class="btn_area">
+						<button type="button" id="btnJoin">
+							<span>로그인</span>
+						</button>
+
+						<div id="btnJoin02">
+							<a class="join" href="joinMember.html" target="" title="">회원가입</a>
+							<a class="join" href="joinStoreAdmin.html" target="" title="">가게 사장님 회원가입</a>
+							<p>로그인 정보가 기억나지 않으세요?<p>
+							<a class="search01" href="#" target="" title="">아이디 찾기</a>
+							<a class="search02" href="#" target="" title="">비밀번호 찾기</a>
+						</div>
+					</div>
+					
+
+				</div> 
+				<!-- content-->
+
+			</div> 
+			<!-- wrapper -->
+		<script src="main.js"></script>
+		<section>
+	</div>
+ </BODY>
+</HTML>

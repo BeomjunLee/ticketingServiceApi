@@ -1,0 +1,45 @@
+###번호표 뽑기 테스트
+POST http://localhost:8080/api/stores/7/new/tickets
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMTA4NTg0OSwidXNlcm5hbWUiOiJ1c2VyIn0.o8CbKIfY0hytGgkAebD-WR1E-LZ3guG8NMRFiTv4Zh4
+
+
+
+{"peopleCount":"5"}
+
+###[관리자]대기중인 번호표 + 가게 현황 보기
+#GET http://localhost:8080/api/stores/tickets
+GET http://localhost:8080/api/stores/tickets?page=1&size=2
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTEwOTA3NjEsInVzZXJuYW1lIjoiYWRtaW4ifQ.LP91duF0BuPCq4zOZ8FimxK-ciOqc7jUxl0jgFnECpk
+
+###[관리자]전체 번호표 보기
+#GET http://localhost:8080/api/stores/tickets
+GET http://localhost:8080/api/stores/tickets/holding
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTEwOTA3NjEsInVzZXJuYW1lIjoiYWRtaW4ifQ.LP91duF0BuPCq4zOZ8FimxK-ciOqc7jUxl0jgFnECpk
+
+###[관리자]번호표 취소 하기
+DELETE http://localhost:8080/api/stores/tickets/9
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTA5ODY0MjUsInVzZXJuYW1lIjoiYWRtaW4ifQ.wruziIDwDsXCi2n6J9l2zqwiuVZ_LSB7-X7yveKYaeg
+
+###[관리자]번호표 체크 하기
+POST http://localhost:8080/api/stores/tickets/10
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTA5ODY0MjUsInVzZXJuYW1lIjoiYWRtaW4ifQ.wruziIDwDsXCi2n6J9l2zqwiuVZ_LSB7-X7yveKYaeg
+
+###[관리자]번호표 보류 하기
+PUT http://localhost:8080/api/stores/tickets/12
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTEwODYwMzIsInVzZXJuYW1lIjoiYWRtaW4ifQ.-L3tEakxl7jwW47ffe2J9zCTKtXnUfyi0BCZME9dT9M
+
+###[관리자]번호표 보류 취소 하기
+DELETE http://localhost:8080/api/stores/tickets/11/holding
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTA5ODY0MjUsInVzZXJuYW1lIjoiYWRtaW4ifQ.wruziIDwDsXCi2n6J9l2zqwiuVZ_LSB7-X7yveKYaeg
+
+###[관리자]번호표 보류 체크 하기
+POST http://localhost:8080/api/stores/tickets/12/holding
+Content-Type: application/json
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTA5ODY0MjUsInVzZXJuYW1lIjoiYWRtaW4ifQ.wruziIDwDsXCi2n6J9l2zqwiuVZ_LSB7-X7yveKYaeg
