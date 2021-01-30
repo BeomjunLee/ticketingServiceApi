@@ -1,6 +1,6 @@
 ## 대기 번호표 관리 서비스
 
-SpringBoot + SpringDataJpa + SpringSecurity JWT + Rest Api<br>
+SpringBoot + SpringDataJpa + SpringSecurity JWT + Rest Api<br><br>
 
 ## 기능
 
