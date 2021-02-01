@@ -3,6 +3,7 @@ package com.hoseo.hackathon.storeticketingservice.security.filters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoseo.hackathon.storeticketingservice.domain.form.LoginForm;
 import com.hoseo.hackathon.storeticketingservice.security.tokens.PreAuthorizationToken;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -42,11 +43,11 @@ public class FormLoginFilter extends AbstractAuthenticationProcessingFilter {
         //요청 정보를 받은 DTO
         LoginForm loginFormDto = objectMapper.readValue(request.getReader(), LoginForm.class);
 
-        PreAuthorizationToken token = new PreAuthorizationToken(loginFormDto);  //PreAuthorization안에 LoginDTO값을 세팅하고
+        PreAuthorizationToken token = new PreAuthorizationToken(loginFormDto);  //PreAuthorization 안에 LoginDTO 값을 세팅하고
 
         return super.getAuthenticationManager().authenticate(token);    
-        //AuthenticationManager로 FormLoginAuthenticationProvider에서 오버라이드해서 사용한 authenticate메서드를 통해 인증 진행
-        //<<모든 방식은 AuthenticationManager를 통해 접근해야됨>>
+        //AuthenticationManager 로 FormLoginAuthenticationProvider 에서 오버라이드해서 사용한 authenticate 메서드를 통해 인증 진행
+        //<<모든 방식은 AuthenticationManager 를 통해 접근해야됨>>
     }
 
     /**

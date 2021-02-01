@@ -2,27 +2,32 @@
 POST http://localhost:8080/api/tokens
 Content-Type: application/json
 
-{"username":"storeadmin","password":"1234"}
+{"username":"test","password":"1234"}
 
 ###회원 가입 테스트
 POST http://localhost:8080/api/members/new
 Content-Type: application/json
 
-{"username":"user", "password":"1234", "name":"이범준", "phoneNum":"2323", "email": "dd@dd"}
+{"username":"test", "password":"1234", "name":"이범준", "phoneNum":"2323", "email": "dd@dd"}
 
-###회원 티켓 조회 테스트
+### GET test
+GET http://localhost:8080/api/members/test
+Content-Type: application/json
+
+###회원 번호표 조회 테스트
 GET http://localhost:8080/api/members/tickets
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMDk4NjI5MywidXNlcm5hbWUiOiJ1c2VyIn0.3nXoFCuCYIEl6imoaAWyurB-2cjTUBvz6_YsYLoNteM
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMzM1OTY2OCwidXNlcm5hbWUiOiJ0ZXN0In0.l8ym-QivMiThPNfAmKztTbxbc8Nlv53VWU9nNzXxgkE
 
-###회원 티켓 취소 테스트
+{"grant_type":"refresh_token"}
+
+###회원 번호표 취소 테스트
 DELETE http://localhost:8080/api/members/tickets
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMDk4NjI5MywidXNlcm5hbWUiOiJ1c2VyIn0.3nXoFCuCYIEl6imoaAWyurB-2cjTUBvz6_YsYLoNteM
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMjE1MDcwOSwidXNlcm5hbWUiOiJ0ZXN0In0.Xf1PYM6gt8gTRMqrYcILMKspy6Ars7LhbW2aXJeDTvs
 
 ###
 GET http://localhost:8080/api/admin/members?page=1&size=2
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTE0ODI5NTAsInVzZXJuYW1lIjoiYWRtaW4ifQ.YlD0hVunghibBF1KQTZwQ9A3X8ctDefk4iETbg7Fp48
 
 

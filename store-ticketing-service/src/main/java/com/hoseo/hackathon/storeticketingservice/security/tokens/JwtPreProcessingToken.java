@@ -8,7 +8,7 @@ public class JwtPreProcessingToken extends UsernamePasswordAuthenticationToken {
         super(principal, credentials);
     }
 
-    public JwtPreProcessingToken(String token) {
-        super(token, token.length());   //crendentials에는 그냥 token의 길이를 담아줬음
+    public JwtPreProcessingToken(String token, String grantType) {
+        super(token, grantType);   //token, grant_type(refresh_token 을 발급받지 않을 때는 "")
     }
 }

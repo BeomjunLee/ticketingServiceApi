@@ -1,7 +1,8 @@
 package com.hoseo.hackathon.storeticketingservice.security.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hoseo.hackathon.storeticketingservice.domain.dto.LoginDto;
+import com.hoseo.hackathon.storeticketingservice.domain.dto.LoginFailDto;
+import com.hoseo.hackathon.storeticketingservice.domain.dto.LoginSuccessDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +27,16 @@ public class FormLoginAuthenticationFailureHandler implements AuthenticationFail
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         Logger log = LoggerFactory.getLogger("로그인 오류");
         log.error(exception.getMessage());
-        LoginDto loginDto = writeDTO(exception.getMessage(), null);
+        LoginFailDto loginFailDto = writeDTO(exception.getMessage());
 
         //JSON형태로 response
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), loginDto);
+        objectMapper.writeValue(response.getWriter(), loginFailDto);
     }
 
-    private LoginDto writeDTO(String message, String token) {
-        String result = "fail";
-        int status = 401;
-        return new LoginDto(result, status, message, token);
+    private LoginFailDto writeDTO(String message) {
+        return new LoginFailDto("fail", 401, message);
     }
 }

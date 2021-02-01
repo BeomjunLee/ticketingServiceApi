@@ -7,9 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+public class LoginSuccessDto {
     private String result;
     private int status;
     private String message;
-    private String token;
+    private String token_type;
+    private String access_token;
+    private String refresh_token;
+    private int expire_in;
 }

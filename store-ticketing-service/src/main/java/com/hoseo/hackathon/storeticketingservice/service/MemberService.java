@@ -5,14 +5,10 @@ import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateStoreNameException;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateUsernameException;
-import com.hoseo.hackathon.storeticketingservice.exception.NotFoundStoreException;
+import com.hoseo.hackathon.storeticketingservice.exception.*;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +34,26 @@ public class MemberService{
             throw new BadCredentialsException("비밀번호가 일치 하지않습니다");
         } else return member;
     }
+
+    /**
+     * 로그인 성공시 refreshToken 저장 및 갱신
+     */
+    @Transactional
+    public void updateRefreshToken(String username, String refreshToken) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + "에 해당되는 유저를 찾을수 없습니다"));
+        member.changeRefreshToken(refreshToken);
+    }
+
+    /**
+     * DB에 저장된 refreshToken 값
+     */
+    public boolean checkRefreshToken(String username, String refreshToken) {
+        String findRefreshToken = memberRepository.findRefreshToken(username).orElseThrow(() -> new NotFoundRefreshTokenException("회원의 refresh_token을 찾을 수 없습니다"));
+        if (refreshToken.equals(findRefreshToken)) return true;
+        else throw new NotMatchedRefreshTokenException("요청된 refresh_token이 회원의 refresh_token과 일치하지 않습니다");
+    }
+
 
     /**
      * 비밀번호 변경

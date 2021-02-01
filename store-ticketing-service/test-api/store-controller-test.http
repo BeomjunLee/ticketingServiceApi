@@ -11,7 +11,7 @@ Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX
 #GET http://localhost:8080/api/stores/tickets
 GET http://localhost:8080/api/stores/tickets?page=1&size=2
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1NUT1JFX0FETUlOIl0sImlzcyI6ImxlZWJlb21qdW4iLCJleHAiOjE2MTEwOTA3NjEsInVzZXJuYW1lIjoiYWRtaW4ifQ.LP91duF0BuPCq4zOZ8FimxK-ciOqc7jUxl0jgFnECpk
+Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMjEzNzY0NCwidXNlcm5hbWUiOiJ0ZXN0In0.yYtPlf4_InE2fDgKDp0IYVfrHOWsx-lVlk0iOhAUfBc
 
 ###[관리자]전체 번호표 보기
 #GET http://localhost:8080/api/stores/tickets

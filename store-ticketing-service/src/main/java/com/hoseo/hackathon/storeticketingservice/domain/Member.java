@@ -41,6 +41,13 @@ public class Member {
     private LocalDateTime createdDate;                      //가입일
     private LocalDateTime deletedDate;                      //탈퇴일
 
+    private String refreshToken;                            //refreshToken
+
+    //refreshToken 갱신
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     //회원 수정
     public void changeMember(String name, String phoneNum, String email) {
         this.name = name;
