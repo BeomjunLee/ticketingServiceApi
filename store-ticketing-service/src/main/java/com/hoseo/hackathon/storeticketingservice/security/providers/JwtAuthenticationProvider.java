@@ -52,7 +52,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
             MemberContext member = null;
         try{
             member = jwtFactory.isValidToken(token);    //토큰 유효성 검사
-            
+
             //클라이언트가 access_token이 만료됐다고 판단하여 refresh_token을 보냈을때 (grant_type = refresh_token 값 일때)
             if (grantType.equals("refresh_token")) {
                 if (memberService.checkRefreshToken(member.getUsername(), token)) { //요청 refresh_token과  회원의 DB에 저장된 refresh_token 값이 일치할때

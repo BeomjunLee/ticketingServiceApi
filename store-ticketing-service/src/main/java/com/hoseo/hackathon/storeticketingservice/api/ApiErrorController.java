@@ -183,4 +183,32 @@ public class ApiErrorController {
                 .build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+
+    /**
+     * RefreshToken 못찾음
+     */
+    @ExceptionHandler(NotFoundRefreshTokenException.class)
+    public ResponseEntity notFoundRefreshToken(NotFoundRefreshTokenException e) {
+        log.error(e.getMessage());
+        Response response = Response.builder()
+                .result("fail")
+                .status(404)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    /**
+     * RefreshToken(Client), RefreshToken(DB) 비교 오류
+     */
+    @ExceptionHandler(NotMatchedRefreshTokenException.class)
+    public ResponseEntity notMatchedRefreshToken(NotMatchedRefreshTokenException e) {
+        log.error(e.getMessage());
+        Response response = Response.builder()
+                .result("fail")
+                .status(400)
+                .message(e.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
