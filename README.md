@@ -2,7 +2,7 @@
 
 SpringBoot + SpringDataJpa + SpringSecurity JWT(access_token & refresh_token) + Rest Api<br><br>
 
-## 기능
+### 기능
 
 - 회원은 가고싶은 매장의 대기 인원수와 대기 시간을 실시간으로 지도에서 확인할 수 있고,<br>
 매장의 대기가 꽉 찼을 때 기다리지 않고 온라인에서 번호표를 뽑아 실시간으로 변동되는 번호표의 정보를 확인 및 취소할 수 있으며, 대기 순번이 가까워지면 문자를 받아볼수 있다.<br><br>
