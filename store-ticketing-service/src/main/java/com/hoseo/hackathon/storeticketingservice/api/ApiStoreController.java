@@ -42,7 +42,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "번호표 뽑기[회원]", notes = "가게의 번호표를 뽑습니다")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping("/{store_id}/new/tickets")
+    @PostMapping("/{store_id}/tickets/new")
     public ResponseEntity createTicket(@PathVariable("store_id") Long store_id, @Valid @RequestBody TicketForm ticketForm, Principal principal) {
         Ticket ticket = Ticket.builder()
                 .peopleCount(ticketForm.getPeopleCount())
@@ -87,11 +87,11 @@ public class ApiStoreController {
     /**
      * [관리자] 보류된 회원 리스트 관리
      * 응답 ; 이름, 전화번호
-     * link : 보류 ticket별 취소, 체크,
+     * link : 보류 ticket 별 취소, 체크,
      */
     @ApiOperation(value = "보류 인원 관리 (번호표 관리)[가게 관리자]", notes = "보류 인원 명단을 관리합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @GetMapping("/tickets/hold")
+    @GetMapping("/tickets/holding")
     public ResponseEntity manageHoldMembers(Principal principal, Pageable pageable, PagedResourcesAssembler<HoldingMembersDto> assembler) {
 
         //보류회원정보
@@ -107,7 +107,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "현재 대기중인 번호표 체크하기[가게 관리자]", notes = "현재 대기 회원의 번호표를 체크합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/tickets/{ticket_id}")
+    @PostMapping("/tickets/{ticket_id}/check-ticket")
     public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.checkTicket(principal.getName(), ticket_id);
         Response response = Response.builder()
@@ -123,7 +123,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "현재 대기중인 번호표 취소[가게 관리자]", notes = "현재 대기 회원의 번호표를 취소합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @DeleteMapping("/tickets/{ticket_id}")
+    @PostMapping("/tickets/{ticket_id}/cancel-ticket")
     public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.cancelTicketByAdmin(principal.getName(), ticket_id);
         Response response = Response.builder()
@@ -139,7 +139,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "현재 대기중인 번호표 보류[가게 관리자]", notes = "현재 대기 회원의 번호표를 보류합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/tickets/{ticket_id}")
+    @PostMapping("/tickets/{ticket_id}/hold-ticket")
     public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdTicket(principal.getName(), ticket_id);
         Response response = Response.builder()
@@ -155,7 +155,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "보류중인 번호표 체크[가게 관리자]", notes = "현재 보류중인 회원의 번호표를 체크합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/tickets/{ticket_id}/hold")
+    @PostMapping("/tickets/{ticket_id}/check-holdingTicket")
     public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdCheckTicket(principal.getName(), ticket_id);
         Response response = Response.builder()
@@ -171,7 +171,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "보류중인 번호표 취소[가게 관리자]", notes = "현재 보류중인 회원의 번호표를 취소합니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @DeleteMapping("/tickets/{ticket_id}/hold")
+    @PostMapping("/tickets/{ticket_id}/cancel-holdingTicket")
     public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdCancelTicket(principal.getName(), ticket_id);
         Response response = Response.builder()
@@ -187,7 +187,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "가게 번호표 OPEN[가게 관리자]", notes = "가게 번호표 뽑기 기능을 활성화시킵니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/status")
+    @PostMapping("/status/open-status")
     public ResponseEntity openTicket(Principal principal) {
         storeService.openTicket(principal.getName());
         Response response = Response.builder()
@@ -203,7 +203,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "가게 번호표 CLOSE[가게 관리자]", notes = "가게 번호표 뽑기 기능을 비활성화시킵니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/status")
+    @PostMapping("/status/close-status")
     public ResponseEntity closeTicket(Principal principal) {
         storeService.closeTicket(principal.getName());
         Response response = Response.builder()
@@ -219,7 +219,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "오류 신청[가게 관리자]", notes = "사이트 관리자한테 오류가 났다고 알림을 보냅니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/errors")
+    @PostMapping("/apply-errors")
     public ResponseEntity sendErrorSystem(Principal principal) {
         storeService.sendErrorSystem(principal.getName());
         Response response = Response.builder()
@@ -235,7 +235,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "가게 공지사항 수정[가게 관리자]", notes = "가게의 공지사항을 수정할수 있습니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/notice")
+    @PostMapping("/edit-notice")
     public ResponseEntity updateNotice(Principal principal, @RequestBody @Valid StoreNoticeForm form) {
         storeService.updateStoreNotice(principal.getName(), form.getNotice());
 
@@ -252,7 +252,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "가게 한 사람당 대기시간 수정[가게 관리자]", notes = "가게의 한 사람당 대기시간을 설정할 수 있습니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/time")
+    @PostMapping("/edit-time")
     public ResponseEntity updateAvgWaitingTime(Principal principal, @RequestBody @Valid AvgTimeForm form) {
         storeService.updateAvgTime(principal.getName(), form.getAvgWaitingTimeByOne());
 

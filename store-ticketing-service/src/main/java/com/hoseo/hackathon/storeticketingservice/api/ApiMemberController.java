@@ -163,7 +163,7 @@ public class ApiMemberController {
      */
     @ApiOperation(value = "회원 정보 수정[회원, 가게관리자]", notes = "회원정보를 수정합니다")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/me")
+    @PatchMapping("/me")
     public ResponseEntity updateMyInfo(Principal principal,
                                        @RequestBody @Valid UpdateMemberForm memberForm,
                                        @RequestBody @Valid UpdateStoreAdminForm storeForm) {
@@ -200,7 +200,7 @@ public class ApiMemberController {
      */
     @ApiOperation(value = "비밀번호 수정[회원, 가게관리자]", notes = "비밀번호를 수정합니다")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_STORE_ADMIN')")
-    @PutMapping("/me/password")
+    @PatchMapping("/me/change-password")
     public ResponseEntity changePassword(Principal principal, @RequestBody @Valid UpdatePasswordForm form) {
         memberService.changePassword(principal.getName(), form.getCurrentPassword(), form.getNewPassword());
         Response response = Response.builder()
@@ -240,7 +240,7 @@ public class ApiMemberController {
      */
     @ApiOperation(value = "번호표 취소[회원]", notes = "회원이 뽑은 번호표를 취소합니다")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping("/tickets")
+    @PostMapping("/tickets/cancel-ticket")
     public ResponseEntity cancelMyTicket(Principal principal) {
         storeService.cancelTicket(principal.getName());
         Response response = Response.builder()
