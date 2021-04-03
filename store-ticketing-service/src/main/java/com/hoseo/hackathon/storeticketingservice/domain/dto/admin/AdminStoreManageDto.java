@@ -12,6 +12,9 @@ import org.springframework.hateoas.PagedModel;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+/**
+ * 매장 관리 dto (admin 용)
+ */
 public class AdminStoreManageDto {
     private PagedModel<EntityModel<StoreListDto>> storeList;
     private int totalEnrollStoreCount;

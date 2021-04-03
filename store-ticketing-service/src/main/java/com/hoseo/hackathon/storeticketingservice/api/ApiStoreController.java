@@ -5,7 +5,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.dto.HoldingMembersDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.WaitingMembersDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.StoreManageDto;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AvgTimeForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.StoreNoticeForm;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.TicketForm;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.HoldingMembersResource;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.WaitingMembersAndStoreManageResource;
@@ -231,35 +231,21 @@ public class ApiStoreController {
     }
 
     /**
-     * 공지사항 수정
+     * 매장 상태 정보 수정 (공지사항, 한사람당 예상 대기시간)
+     * @param principal
+     * @param form
+     * @return
      */
     @ApiOperation(value = "가게 공지사항 수정[가게 관리자]", notes = "가게의 공지사항을 수정할수 있습니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
     @PostMapping("/edit-notice")
-    public ResponseEntity updateNotice(Principal principal, @RequestBody @Valid StoreNoticeForm form) {
-        storeService.updateStoreNotice(principal.getName(), form.getNotice());
+    public ResponseEntity updateInfo(Principal principal, @RequestBody @Valid StoreInfoForm form) {
+        storeService.updateStoreInfo(principal.getName(), form);
 
         Response response = Response.builder()
                 .result("success")
                 .status(200)
                 .message("공지사항 변경 성공")
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * 한사람당 대기시간 수정
-     */
-    @ApiOperation(value = "가게 한 사람당 대기시간 수정[가게 관리자]", notes = "가게의 한 사람당 대기시간을 설정할 수 있습니다")
-    @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/edit-time")
-    public ResponseEntity updateAvgWaitingTime(Principal principal, @RequestBody @Valid AvgTimeForm form) {
-        storeService.updateAvgTime(principal.getName(), form.getAvgWaitingTimeByOne());
-
-        Response response = Response.builder()
-                .result("success")
-                .status(200)
-                .message("대기시간 변경 성공")
                 .build();
         return ResponseEntity.ok(response);
     }

@@ -6,8 +6,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.Ticket;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.*;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateStoreAdminForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.StoreNoticeForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
@@ -20,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
@@ -34,10 +32,10 @@ public class AdminService {
     private final TicketRepository ticketRepository;
     private final StoreRepository storeRepository;
 
-//===============================================가게 관리=============================================
+//===============================================매장 관리=============================================
 
     /**
-     * 상태별 가게 목록 보기
+     * 상태별 매장 목록 보기
      */
     public Page<StoreListDto> findStores(StoreStatus storeStatus, Pageable pageable) {
         Page<Store> stores = storeRepository.findAllByStoreStatus(storeStatus, pageable);
@@ -53,39 +51,39 @@ public class AdminService {
     }
 
     /**
-     * 등록된 가게 수 보기
+     * 등록된 매장 수 보기
      */
     public int totalEnrollStoreCount() {
         return storeRepository.countByStoreStatus(StoreStatus.VALID);
     }
 
     /**
-     * 가게 관리자 정보 보기
+     * 매장 관리자 정보 보기
      */
     public Member findStoreAdmin(Long member_id) {
-        return memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("가게 관리자를 찾을수 없습니다"));
+        return memberRepository.findById(member_id).orElseThrow(() -> new NoSuchElementException("매장 관리자를 찾을수 없습니다"));
     }
 
     /**
-     * 가게 수정
+     * 매장 수정
      */
 
     /**
-     * 가게 이름으로 검색
+     * 매장 이름으로 검색
      */
 
     /**
-     * 가게 주소로 검색
+     * 매장 주소로 검색
      */
 
-                   //================가게 번호표 관리 기능================
+                   //================매장 번호표 관리 기능================
     /**
      *  번호표 발급 활성화
      */
     @Transactional
     public void openTicket(Long store_id) {
         Store store = storeRepository.findById(store_id)
-                .orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+                .orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
         if (store.getStoreTicketStatus().equals(StoreTicketStatus.OPEN)) {
             throw new IsAlreadyCompleteException("이미 활성화 되어있습니다");
         }
@@ -98,7 +96,7 @@ public class AdminService {
     @Transactional
     public void closeTicket(Long store_id) {
         Store store = storeRepository.findById(store_id)
-                .orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+                .orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
         if (store.getStoreTicketStatus().equals(StoreTicketStatus.CLOSE)) {
             throw new IsAlreadyCompleteException("이미 비활성화 되어있습니다");
         }
@@ -112,7 +110,7 @@ public class AdminService {
     public Ticket cancelTicketByAdmin(Long store_id, Long ticket_id) {
 
         Store store = storeRepository.findById(store_id)
-                .orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+                .orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
         Ticket ticket = ticketRepository.findById(ticket_id).orElseThrow(() -> new NotFoundTicketException("티켓을 찾을수 없습니다"));
 
@@ -140,7 +138,7 @@ public class AdminService {
             throw new IsAlreadyCompleteException("이미 취소처리 되었습니다");
         }
 
-        Store store = storeRepository.findById(ticket.getStore().getId()).orElseThrow(() -> new NotFoundStoreException("해당되는 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(ticket.getStore().getId()).orElseThrow(() -> new NotFoundStoreException("해당되는 매장 찾을수 없습니다"));
 
         int totalWaitingCount = ticketRepository.countByStore_IdAndStatus(store.getId(), TicketStatus.VALID);
 
@@ -162,8 +160,8 @@ public class AdminService {
             throw new IsAlreadyCompleteException("이미 체크처리 되었습니다");
         }
 
-        //관리자의 가게 찾기
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        //관리자의 매장 찾기
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
         int totalWaitingCount = ticketRepository.countByStore_IdAndStatus(store.getId(), TicketStatus.VALID);
 
@@ -186,8 +184,8 @@ public class AdminService {
         if (ticket.getStatus().equals(TicketStatus.HOLD)) {
             throw new IsAlreadyCompleteException("이미 보류처리 되었습니다");
         }
-        //관리자의 가게 찾기
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        //관리자의 매장 찾기
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
         int totalWaitingCount = ticketRepository.countByStore_IdAndStatus(store.getId(), TicketStatus.VALID);
 
@@ -231,10 +229,10 @@ public class AdminService {
      * 보류한 회원들 + 번호표 보기
      */
     public Page<HoldingMembersDto> findHoldMembers(Long store_id, Pageable pageable) {
-        //관리자의 가게 찾기
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        //관리자의 매장 찾기
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
-        if (store.getStoreStatus().equals(StoreStatus.INVALID)) {   //가게 승인여부 체크
+        if (store.getStoreStatus().equals(StoreStatus.INVALID)) {   //매장 승인여부 체크
             throw new NotAuthorizedStoreException("승인되지 않은 가게입니다");
         }
 
@@ -251,8 +249,8 @@ public class AdminService {
      * 대기중인 회원들 + 번호표  보기
      */
     public Page<WaitingMembersDto> findWaitingMembers(Long store_id, Pageable pageable) {
-        //관리자의 가게 찾기
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        //관리자의 매장 찾기
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
         Page<Ticket> tickets = ticketRepository.findAllByStore_IdAndStatus(store.getId(), TicketStatus.VALID, pageable);
         return tickets.map(ticket -> WaitingMembersDto.builder()
@@ -265,30 +263,22 @@ public class AdminService {
     }
 
     /**
-     * 가게 공지사항 수정
+     * 매장 상태 정보 수정
      */
     @Transactional
-    public void updateStoreNotice(Long store_id, String notice) {
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
-        store.changeNotice(notice);
+    public void updateStoreInfo(Long store_id, StoreInfoForm form) {
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
+        store.changeNotice(form.getNotice());
+        store.changeAvgWaitingTimeByOne(form.getAvgWaitingTimeByOne());
     }
 
     /**
-     * 가게 한사람당 평균 대기시간 수정
-     */
-    @Transactional
-    public void updateAvgTime(Long store_id, int avgTime) {
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
-        store.changeAvgWaitingTimeByOne(avgTime);
-    }
-
-    /**
-     * 가게, 관리자 수정
+     * 매장, 관리자 수정
      */
     @Transactional
     public void updateStoreAdmin(Long store_id, Long member_id, AdminUpdateStoreAdminForm form) {
         Member member = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 회원을 찾을수 없습니다"));
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
         if(!member.getUsername().equalsIgnoreCase(form.getMember_username())){//수정할 아이디가 중복이 아닐경우
             validateDuplicateMember(form.getMember_username());
@@ -296,7 +286,7 @@ public class AdminService {
         //포인트는 서비스 미적용
         member.changeMemberByAdmin(form.getMember_username(), form.getMember_name(), form.getMember_phoneNum(), form.getMember_email(), member.getPoint());
 
-        if (!store.getName().equalsIgnoreCase(form.getStore_name())) {//수정할 가게명이 중복이 아닐경우
+        if (!store.getName().equalsIgnoreCase(form.getStore_name())) {//수정할 매장이 중복이 아닐경우
             validateDuplicateStore(form.getStore_name());
         }
         store.changeStoreByAdmin(form.getStore_name(), form.getStore_phoneNum(), form.getStore_address(), form.getStore_companyNumber());
@@ -304,7 +294,7 @@ public class AdminService {
     }
 
     /**
-     * 중복 가게명 검증
+     * 중복 매장명 검증
      */
     public void validateDuplicateStore(String name) {
         int findStores = storeRepository.countByName(name);
@@ -315,10 +305,10 @@ public class AdminService {
     }
 
     /**
-     * 가게 정보 보기(승인되지않은가게도)
+     * 매장 정보 보기(승인되지 않은 매장도)
      */
     public Store findStore(Long store_id) {
-        return storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        return storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
     }
 
 //    /**
@@ -439,24 +429,24 @@ public class AdminService {
 //============================================가입 승인====================================================
 
     /**
-     * 가게 관리자 가입 승인 (시간넣어야됨)
+     * 매장 관리자 가입 승인 (시간넣어야됨)
      */
     @Transactional
     public void permitStoreAdmin(Long member_id, Long store_id) {
         Member member = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
         member.changeMemberStatus(MemberStatus.VALID);
         store.changeStoreStatus(StoreStatus.VALID);
         store.changeCreatedDate(LocalDateTime.now());
     }
 
     /**
-     * 가게 관리자 가입 승인 취소
+     * 매장 관리자 가입 승인 취소
      */
     @Transactional
     public void rejectStoreAdmin(Long member_id, Long store_id) {
         Member member = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
         member.changeMemberStatus(MemberStatus.INVALID);
         store.changeStoreStatus(StoreStatus.INVALID);
     }
@@ -505,7 +495,7 @@ public class AdminService {
      */
     @Transactional
     public void sendErrorSystem(Long store_id) {
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("관리자의 이름으로 등록된 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("관리자의 이름으로 등록된 매장을 찾을수 없습니다"));
         store.changeErrorStatus(ErrorStatus.ERROR);
     }
 
@@ -514,7 +504,7 @@ public class AdminService {
      */
     @Transactional
     public void completeErrorSystem(Long store_id) {
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("관리자의 이름으로 등록된 가게를 찾을수 없습니다"));
+        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("관리자의 이름으로 등록된 매장을 찾을수 없습니다"));
         store.changeErrorStatus(ErrorStatus.GOOD);
     }
 

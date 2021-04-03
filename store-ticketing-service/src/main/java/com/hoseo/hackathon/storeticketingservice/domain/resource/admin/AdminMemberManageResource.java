@@ -7,6 +7,9 @@ import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+/**
+ * 회원 관리 dto + hateoas link
+ */
 public class AdminMemberManageResource extends EntityModel<AdminMemberManageDto> {
     public AdminMemberManageResource(AdminMemberManageDto dto, Link... links) {
         super(dto, links);

@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * 회원 리스트 dto
+ */
 public class MemberListDto {
     @JsonIgnore
     private Long ticket_id;

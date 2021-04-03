@@ -7,6 +7,9 @@ import org.springframework.hateoas.Link;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+/**
+ * 매장 관리 + hateoas link
+ */
 public class AdminWaitingMembersAndStoreManageResource extends EntityModel<StoreManageDto> { //가게 관리 메서드에 사용
     public AdminWaitingMembersAndStoreManageResource(StoreManageDto dto, Link... links){
         super(dto, links);

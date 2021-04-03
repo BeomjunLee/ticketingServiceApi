@@ -3,6 +3,7 @@ package com.hoseo.hackathon.storeticketingservice.service;
 import com.hoseo.hackathon.storeticketingservice.domain.*;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.HoldingMembersDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.WaitingMembersDto;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.ErrorStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus;
@@ -215,18 +216,12 @@ public class StoreService {
     /**
      * 가게 공지사항 수정
      */
-    public void updateStoreNotice(String username, String notice) {
+    public void updateStoreInfo(String username, StoreInfoForm form) {
         Store store = storeRepository.findStoreJoinMemberByUsername(username).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
-        store.changeNotice(notice);
+        store.changeNotice(form.getNotice());
+        store.changeAvgWaitingTimeByOne(form.getAvgWaitingTimeByOne());
     }
 
-    /**
-     * 가게 한사람당 평균 대기시간 수정
-     */
-    public void updateAvgTime(String username, int avgTime) {
-        Store store = storeRepository.findStoreJoinMemberByUsername(username).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
-        store.changeAvgWaitingTimeByOne(avgTime);
-    }
 
     /**
      * [관리자] 시스템 장애 신청
