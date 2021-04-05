@@ -3,6 +3,7 @@ package com.hoseo.hackathon.storeticketingservice.domain;
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
 import lombok.*;
 
+import javax.jdo.annotations.Unique;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class Ticket {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @Unique
     private Member member;
 
     @Builder
