@@ -8,6 +8,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.service.MemberService;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import javax.persistence.EntityManager;
 
 @Configuration
 public class AppConfig {
@@ -39,6 +42,12 @@ public class AppConfig {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    //querydsl
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager em) {
+        return new JPAQueryFactory(em);
     }
 
 //   // 어플리케이션 시작시 test 계정 생성
