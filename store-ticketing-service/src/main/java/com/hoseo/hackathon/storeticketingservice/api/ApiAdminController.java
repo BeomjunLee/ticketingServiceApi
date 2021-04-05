@@ -33,6 +33,9 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/admin", produces = MediaTypes.HAL_JSON_VALUE)
+/**
+ * 사이트 관리자용
+ */
 public class ApiAdminController {
     private final AdminService adminService;
 

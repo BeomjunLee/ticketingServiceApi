@@ -54,7 +54,7 @@ public class Swagger2Config{
                 .build();
     }
 
-    //swagger랑 hateoas랑 충돌나서 해결
+    //swagger 랑 hateoas 랑 충돌나서 해결
     @Bean
     public LinkDiscoverers discoverers() {
         List<LinkDiscoverer> plugins = new ArrayList<>();

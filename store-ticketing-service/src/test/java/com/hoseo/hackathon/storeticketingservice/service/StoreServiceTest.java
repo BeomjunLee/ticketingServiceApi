@@ -63,7 +63,6 @@ class StoreServiceTest {
 
         adminService.permitStoreAdmin(storeAdmin.getId(), store.getId());   //사이트 관리자가 가입 승인
         storeService.openTicket(storeAdmin.getUsername()); //번호표 발급 허용
-        storeService.updateAvgTime(storeAdmin.getUsername(), 5);//대기시간 명당 5분 설정
     }
     
     @Test
