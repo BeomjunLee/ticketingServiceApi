@@ -33,7 +33,7 @@ public class StoreService {
      * [회원] 번호표 뽑기
      * @param ticket 번호표 entity
      * @param store_id 매장 고유 id 값
-     * @param username 매장 관리자 아이디
+     * @param username 회원 아이디
      * @return created 번호표 entity
      */
     public Ticket createTicket(Ticket ticket, Long store_id, String username) {

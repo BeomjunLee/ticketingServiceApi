@@ -121,7 +121,6 @@ public class MemberService{
 
         memberRepository.save(member);
         storeRepository.save(store);
-
     }
 
     /**
