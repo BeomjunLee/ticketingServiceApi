@@ -2,13 +2,19 @@ plugins {
     id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'java'
+    //querydsl
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+
+    //react 연동
 //    id 'com.github.node-gradle.node' version '2.2.3'
+
 }
 
 group = 'com.hoseo.hackathon'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+//lombok
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -19,6 +25,7 @@ repositories {
     mavenCentral()
 }
 
+//react 연동==
 //node{
 //    version = '14.15.4'
 //
@@ -56,37 +63,64 @@ repositories {
 //processResources{
 //    dependsOn 'copyFrontendToBuild'
 //}
+//react 연동 끝==
 
 dependencies {
+    //jdbc
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-
+    //spring data jpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+    //querydsl jpa
+    implementation 'com.querydsl:querydsl-jpa'
+    //spring web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //스웨거
+    //devtools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //hateoas
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    //jpa sql log
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+    //swagger2
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    //model mapper
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.1'
+    //lombok
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
-
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
     annotationProcessor 'org.projectlombok:lombok'
+    //h2 db
+    runtimeOnly 'com.h2database:h2'
+    //oracle
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    //jwt
+    compile group: 'com.auth0', name: 'java-jwt', version: '3.12.0'
+    //swagger hateoas 충돌나서 해결
+    compile group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '1.2.0.RELEASE'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    //jwt토큰
-    compile group: 'com.auth0', name: 'java-jwt', version: '3.12.0'
-
-    //swagger랑 hateoas랑 충돌나서 해결
-    compile group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '1.2.0.RELEASE'
 }
 
 test {
     useJUnitPlatform()
 }
+//querydsl 추가 시작==
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝==
