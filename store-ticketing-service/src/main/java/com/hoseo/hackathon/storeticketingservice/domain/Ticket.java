@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ticket {
 
@@ -34,6 +33,11 @@ public class Ticket {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Builder
+    public Ticket(int peopleCount) {
+        this.peopleCount = peopleCount;
+    }
+
     //항목 추가 메서드
     public void changeTicket(int peopleCount, int waitingNum, int waitingTime, LocalDateTime createdDate, TicketStatus status) {
         this.peopleCount = peopleCount;
@@ -47,6 +51,8 @@ public class Ticket {
     //==연관관계 편의메서드
     public void setMember(Member member) {
         this.member = member;
+        member.changeTicket(this);
+
     }
     //==연관관계 편의메서드
     public void setStore(Store store) {
