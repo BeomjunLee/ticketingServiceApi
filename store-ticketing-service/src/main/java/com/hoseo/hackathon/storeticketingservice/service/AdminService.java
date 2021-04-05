@@ -9,6 +9,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateStoreAdm
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
+import com.hoseo.hackathon.storeticketingservice.repository.MemberQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
@@ -31,6 +32,7 @@ public class AdminService {
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
     private final StoreRepository storeRepository;
+    private final MemberQueryRepository memberQueryRepository;
 
 //===============================================매장 관리=============================================
 
@@ -75,12 +77,9 @@ public class AdminService {
      */
 
     /**
-     * 매장 이름으로 검색
+     * 매장 이름, 주소 등으로 검색 (동적쿼리)
      */
 
-    /**
-     * 매장 주소로 검색
-     */
 
 //=================================매장 번호표 관리 기능=======================================
 
@@ -355,8 +354,8 @@ public class AdminService {
      * @return 페이징 처리된 MemberList dto
      */
     public Page<MemberListDto> findMembers(Pageable pageable, MemberStatus status) {
-        return memberRepository.findAllByStatus(pageable, status).map(member -> MemberListDto.builder()
-                    .ticket_id(ticketRepository.findTicketIdJoinMemberId(member.getId()).orElse(null))
+        return memberQueryRepository.findAllByStatus(pageable, status).map(member -> MemberListDto.builder()
+                    .ticket_id(member.getTicket().getId())
                     .member_id(member.getId())
                     .username(member.getUsername())
                     .name(member.getName())
