@@ -26,7 +26,7 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     private TicketStatus status;        //티켓 유효 상태(valid, invalid, cancel)
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;                //store_id
 
