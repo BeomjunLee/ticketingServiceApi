@@ -41,7 +41,7 @@ public class StoreTicketingServiceApplication {
         storeService.openTicket(storeAdmin.getUsername()); //번호표 발급 허용
         Store findStore = storeService.findStore("storeadmin");
 
-        for(int i = 1; i <= 10; i++) {
+        for(int i = 1; i <= 30; i++) {
             Member member = Member.builder()
                     .username("member"+i)
                     .password("1234")

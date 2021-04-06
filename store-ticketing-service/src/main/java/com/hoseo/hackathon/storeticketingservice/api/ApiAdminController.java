@@ -16,9 +16,11 @@ import com.hoseo.hackathon.storeticketingservice.domain.resource.admin.*;
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
+import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
 import com.hoseo.hackathon.storeticketingservice.service.AdminService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -42,15 +44,16 @@ public class ApiAdminController {
 //========================================매장 관리============================================
 
     /**
-     * 관리할 매장 리스트 보기
-     * @param pageable 페이징
+     * 관리할 매장 리스트 보기 (아이디, 이름, 전화번호 검색가능)
      * @param assembler 페이징 관련 hateoas
      * @return 매장 관리 + hateoas link
      */
     @ApiOperation(value = "매장 목록 관리[사이트 관리자]", notes = "매장리스트를 조회하고 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores")
-    public ResponseEntity findStores(Pageable pageable, PagedResourcesAssembler<StoreListDto> assembler) {
+    public ResponseEntity findStores(@RequestParam(defaultValue = "0") int page, PagedResourcesAssembler<StoreListDto> assembler) {
+        Pageable pageable = PageRequest.of(page, 10);
+
         int totalEnrollStoreCount = adminService.totalEnrollStoreCount();
         AdminStoreManageDto dto = AdminStoreManageDto.builder()
                 .storeList(assembler.toModel(adminService.findStores(StoreStatus.VALID, pageable), e -> new AdminStoreListResource(e)))
@@ -71,7 +74,9 @@ public class ApiAdminController {
     @ApiOperation(value = "대기 인원 관리 + 매장 현황 관리 (번호표 관리)[사이트 관리자]", notes = "사이트 관리자가 원하는 매장의 대기 인원을 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores/{store_id}")
-    public ResponseEntity manageAdminStore(@PathVariable("store_id") Long store_id, Pageable pageable, PagedResourcesAssembler<WaitingMembersDto> assembler) {
+    public ResponseEntity manageAdminStore(@PathVariable("store_id") Long store_id,
+                                           Pageable pageable,
+                                           PagedResourcesAssembler<WaitingMembersDto> assembler) {
         Store store = adminService.findStore(store_id);
         StoreManageDto dto = StoreManageDto.builder()
                 .waitingMembers(assembler.toModel(adminService.findWaitingMembers(store_id, pageable), e -> new AdminWaitingMembersResource(e)))
@@ -309,19 +314,22 @@ public class ApiAdminController {
 
     /**
      * 관리할 회원 리스트 보기
-     * @param pageable 페이징
      * @param assembler 페이징 관련 hateoas
      * @return 회원 관리 dto + hateoas link
      */
     @ApiOperation(value = "회원 관리[사이트 관리자]", notes = "사이트 관리자가 회원 목록을 조회하며 회원을 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/members")
-    public ResponseEntity manageMembers(Pageable pageable, PagedResourcesAssembler<MemberListDto> assembler) {
-        //회원 리스트
+    public ResponseEntity manageMembers(@RequestParam(defaultValue = "0") int page,
+                                        PagedResourcesAssembler<MemberListDto> assembler,
+                                        MemberSearchCondition condition) {
+
+        Pageable pageable = PageRequest.of(page, 10);
+
         AdminMemberManageDto dto = AdminMemberManageDto.builder()
                 .totalMemberCount(adminService.totalMemberCount())
                 .currentUsingServiceCount(adminService.currentUsingServiceCount())
-                .memberList(assembler.toModel(adminService.findMembers(pageable, MemberStatus.VALID), e -> new AdminMemberListResource(e)))
+                .memberList(assembler.toModel(adminService.findMembers(pageable, MemberStatus.VALID, condition), e -> new AdminMemberListResource(e)))
                 .build();
         AdminMemberManageResource resource = new AdminMemberManageResource(dto);
         return ResponseEntity.ok(resource);

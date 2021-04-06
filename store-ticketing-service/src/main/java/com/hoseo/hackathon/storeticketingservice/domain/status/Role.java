@@ -15,12 +15,12 @@ public enum Role {
         this.role = name;
     }
 
-    //enum객체 String비교로직
+    //enum 객체 String 비교로직
     public boolean isCorrectName(String name) {
         return name.equalsIgnoreCase(this.role);
     }
 
-    //name을 MemberRole에서 찾아서 리턴
+    //name 을 MemberRole 에서 찾아서 리턴
     public static Role getRoleByName(String name) {
         return Arrays.stream(Role.values()).filter(r -> r.isCorrectName(name)).findFirst()
                 .orElseThrow(() -> new NoSuchElementException("검색된 권한이 없습니다"));

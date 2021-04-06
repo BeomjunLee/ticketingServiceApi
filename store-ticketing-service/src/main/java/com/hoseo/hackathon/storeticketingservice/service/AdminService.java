@@ -13,6 +13,7 @@ import com.hoseo.hackathon.storeticketingservice.repository.MemberQueryRepositor
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -353,16 +354,8 @@ public class AdminService {
      * @param status 회원 상태
      * @return 페이징 처리된 MemberList dto
      */
-    public Page<MemberListDto> findMembers(Pageable pageable, MemberStatus status) {
-        return memberQueryRepository.findAllByStatus(pageable, status).map(member -> MemberListDto.builder()
-                    .ticket_id(member.getTicket().getId())
-                    .member_id(member.getId())
-                    .username(member.getUsername())
-                    .name(member.getName())
-                    .phoneNum(member.getPhoneNum())
-                    .email(member.getEmail())
-                    .createdDate(member.getCreatedDate())
-                    .build());
+    public Page<MemberListDto> findMembers(Pageable pageable, MemberStatus status, MemberSearchCondition condition) {
+        return memberQueryRepository.findAllByStatus(pageable, status, condition);
     }
 
     /**
