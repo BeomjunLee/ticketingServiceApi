@@ -46,16 +46,16 @@ public class ApiAdminController {
 
     /**
      * 관리할 매장 리스트 보기 (아이디, 이름, 전화번호 검색가능)
+     * @param pageable 페이징
      * @param assembler 페이징 관련 hateoas
      * @return 매장 관리 + hateoas link
      */
     @ApiOperation(value = "매장 목록 관리[사이트 관리자]", notes = "매장리스트를 조회하고 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores")
-    public ResponseEntity findStores(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity findStores(Pageable pageable,
                                      PagedResourcesAssembler<StoreListDto> assembler,
                                      StoreSearchCondition condition) {
-        Pageable pageable = PageRequest.of(page, 10);
 
         int totalEnrollStoreCount = adminService.totalEnrollStoreCount();
         AdminStoreManageDto dto = AdminStoreManageDto.builder()
@@ -75,11 +75,12 @@ public class ApiAdminController {
      * @return 매장 관리 + hateoas link
      */
     @ApiOperation(value = "대기 인원 관리 + 매장 현황 관리 (번호표 관리)[사이트 관리자]", notes = "사이트 관리자가 원하는 매장의 대기 인원을 관리합니다")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores/{store_id}")
     public ResponseEntity manageAdminStore(@PathVariable("store_id") Long store_id,
                                            Pageable pageable,
                                            PagedResourcesAssembler<WaitingMembersDto> assembler) {
+
         Store store = adminService.findStore(store_id);
         StoreManageDto dto = StoreManageDto.builder()
                 .waitingMembers(assembler.toModel(adminService.findWaitingMembers(store_id, pageable), e -> new AdminWaitingMembersResource(e)))
@@ -323,11 +324,9 @@ public class ApiAdminController {
     @ApiOperation(value = "회원 관리[사이트 관리자]", notes = "사이트 관리자가 회원 목록을 조회하며 회원을 관리합니다")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/members")
-    public ResponseEntity manageMembers(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity manageMembers(Pageable pageable,
                                         PagedResourcesAssembler<MemberListDto> assembler,
                                         MemberSearchCondition condition) {
-
-        Pageable pageable = PageRequest.of(page, 10);
 
         AdminMemberManageDto dto = AdminMemberManageDto.builder()
                 .totalMemberCount(adminService.totalMemberCount())
@@ -452,10 +451,10 @@ public class ApiAdminController {
     @ApiOperation(value = "매장 승인 목록 관리[사이트 관리자]", notes = "가입 대기중인 매장 목록을 조회하고 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores/waiting")
-    public ResponseEntity findStoresWaitingToJoin(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity findStoresWaitingToJoin(Pageable pageable,
                                                   PagedResourcesAssembler<StoreListDto> assembler,
                                                   StoreSearchCondition condition) {
-        Pageable pageable = PageRequest.of(page, 10);
+
         int totalEnrollStoreCount = adminService.totalEnrollStoreCount();
         AdminStoreManageDto dto = AdminStoreManageDto.builder()
                 .storeList(assembler.toModel(adminService.findStores(StoreStatus.INVALID, pageable, condition), e -> new AdminStoreWaitingToJoinListResource(e)))

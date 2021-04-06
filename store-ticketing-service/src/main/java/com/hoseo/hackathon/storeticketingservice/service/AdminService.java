@@ -33,6 +33,7 @@ public class AdminService {
     private final StoreRepository storeRepository;
     private final MemberQueryRepository memberQueryRepository;
     private final StoreQueryRepository storeQueryRepository;
+    private final TicketQueryRepository ticketQueryRepository;
 
 //===============================================매장 관리=============================================
 
@@ -255,16 +256,16 @@ public class AdminService {
      * @return 페이징 처리된 WaitingMembers dto
      */
     public Page<WaitingMembersDto> findWaitingMembers(Long store_id, Pageable pageable) {
-        //관리자의 매장 찾기
-        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
+//        //관리자의 매장 찾기
+//        Store store = storeRepository.findById(store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
 
-        Page<Ticket> tickets = ticketRepository.findAllByStore_IdAndStatus(store.getId(), TicketStatus.VALID, pageable);
+        Page<Ticket> tickets = ticketQueryRepository.findTickets(store_id, TicketStatus.VALID, pageable);
         return tickets.map(ticket -> WaitingMembersDto.builder()
                 .waitingNum(ticket.getWaitingNum())
                 .name(ticket.getMember().getName())
                 .phoneNum(ticket.getMember().getPhoneNum())
                 .ticket_id(ticket.getId())
-                .store_id(store.getId())
+                .store_id(store_id)
                 .build());
     }
 
