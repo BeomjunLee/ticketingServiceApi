@@ -11,6 +11,6 @@ public class MyTicketResource extends EntityModel<MyTicketDto> {
     public MyTicketResource(MyTicketDto dto, Link... links) {
         super(dto, links);
         add(linkTo(ApiMemberController.class).slash("tickets").withSelfRel());
-        add(linkTo(ApiMemberController.class).slash("tickets").withRel("취소"));
+        add(linkTo(ApiMemberController.class).slash("cancel-ticket").withRel("취소"));
     }
 }

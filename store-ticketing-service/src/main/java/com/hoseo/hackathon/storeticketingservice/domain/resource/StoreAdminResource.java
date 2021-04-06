@@ -10,8 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class StoreAdminResource extends EntityModel<StoreAdminDto> {
     public StoreAdminResource(StoreAdminDto dto, Link... links){
         super(dto, links);
-        add(linkTo(ApiMemberController.class).slash(dto.getMember_id()).withSelfRel());
-        add(linkTo(ApiMemberController.class).slash(dto.getMember_id()).withRel("회원 수정"));
-        add(linkTo(ApiMemberController.class).slash(dto.getMember_id()).withRel("회원 탈퇴"));
+        add(linkTo(ApiMemberController.class).slash("me").withSelfRel());
+        add(linkTo(ApiMemberController.class).slash("me").withRel("회원 수정"));
     }
 }

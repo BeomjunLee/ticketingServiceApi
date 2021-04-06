@@ -17,7 +17,6 @@ public class AdminWaitingMembersAndStoreManageResource extends EntityModel<Store
         add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("open-status").withRel("번호표 OPEN"));
         add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("close-status").withRel("번호표 CLOSE"));
         add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("apply-errors").withRel("오류 접수"));
-        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("--").withRel("공지사항 수정"));
-        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("--").withRel("한사람당 대기시간 수정"));
+        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("edit").withRel("매장 정보 수정"));
     }
 }

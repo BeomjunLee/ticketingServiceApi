@@ -15,7 +15,5 @@ public class AdminMemberManageResource extends EntityModel<AdminMemberManageDto>
         super(dto, links);
         add(linkTo(ApiStoreController.class).slash("members").withSelfRel());
         add(linkTo(ApiStoreController.class).slash("delete-members").withRel("탈퇴후 7일지난 회원 영구삭제"));
-        add(linkTo(ApiStoreController.class).slash("--").withRel("검색"));
-        //TODO 검색 링크추가
     }
 }

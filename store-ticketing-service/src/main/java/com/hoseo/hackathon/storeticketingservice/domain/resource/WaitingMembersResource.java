@@ -10,9 +10,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class WaitingMembersResource extends EntityModel<WaitingMembersDto> {
     public WaitingMembersResource(WaitingMembersDto dto, Link... links){
         super(dto, links);
-        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).withRel("보류"));
-        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).withRel("취소"));
-        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).withRel("체크"));
+        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).slash("hold-ticket").withRel("보류"));
+        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).slash("cancel-ticket").withRel("취소"));
+        add(linkTo(ApiStoreController.class).slash("tickets").slash(dto.getTicket_id()).slash("check-ticket").withRel("체크"));
     }
 
 }

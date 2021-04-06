@@ -14,7 +14,5 @@ public class AdminStoreManageResource extends EntityModel<AdminStoreManageDto> {
     public AdminStoreManageResource(AdminStoreManageDto dto, Link... links) {
         super(dto, links);
         add(linkTo(ApiStoreController.class).slash("stores").withSelfRel());
-        add(linkTo(ApiStoreController.class).slash("stores--").withRel("검색"));
-        //TODO 검색 링크추가
     }
 }

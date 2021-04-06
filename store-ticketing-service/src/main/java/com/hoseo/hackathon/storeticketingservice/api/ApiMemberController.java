@@ -136,8 +136,6 @@ public class ApiMemberController {
                     .member_name(member.getName())
                     .member_phoneNum(member.getPhoneNum())
                     .member_email(member.getEmail())
-
-
                     .store_id(store.getId())
                     .store_name(store.getName())
                     .store_address(store.getAddress())

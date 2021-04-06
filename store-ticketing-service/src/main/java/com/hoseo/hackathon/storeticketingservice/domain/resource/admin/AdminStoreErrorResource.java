@@ -10,8 +10,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class AdminStoreErrorResource extends EntityModel<StoreErrorListDto> {
     public AdminStoreErrorResource(StoreErrorListDto dto, Link... links) {
         super(dto, links);
-        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("errors").withRel("에러 수정 완료"));
-        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).withRel("가게 번호표 관리"));
-        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("members").slash(dto.getMember_id()).withRel("가게 관리자 정보보기"));
+        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("complete-errors").withRel("오류 수정 완료"));
+        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).withRel("매장 번호표 관리"));
+        add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("members").slash(dto.getMember_id()).withRel("매장 관리자 정보보기"));
     }
 }

@@ -75,7 +75,7 @@ public class ApiAdminController {
      * @return 매장 관리 + hateoas link
      */
     @ApiOperation(value = "대기 인원 관리 + 매장 현황 관리 (번호표 관리)[사이트 관리자]", notes = "사이트 관리자가 원하는 매장의 대기 인원을 관리합니다")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores/{store_id}")
     public ResponseEntity manageAdminStore(@PathVariable("store_id") Long store_id,
                                            Pageable pageable,
@@ -111,7 +111,6 @@ public class ApiAdminController {
         //보류회원정보
         PagedModel<EntityModel<HoldingMembersDto>> holdingMembers =
                 assembler.toModel(adminService.findHoldMembers(store_id, pageable), e -> new HoldingMembersResource(e));
-        
         return ResponseEntity.ok(holdingMembers);
     }
 

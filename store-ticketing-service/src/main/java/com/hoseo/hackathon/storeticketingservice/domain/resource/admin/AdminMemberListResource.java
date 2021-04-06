@@ -13,7 +13,7 @@ public class AdminMemberListResource extends EntityModel<MemberListDto> {
         add(linkTo(ApiAdminController.class).slash("members").slash(dto.getMember_id()).withRel("회원 탈퇴"));
         add(linkTo(ApiAdminController.class).slash("members").slash(dto.getMember_id()).withRel("회원 수정"));
         if(dto.getTicket_id() != null) {
-            add(linkTo(ApiAdminController.class).slash("members/tickets").slash(dto.getMember_id()).withRel("티켓 취소"));
+            add(linkTo(ApiAdminController.class).slash("members/tickets").slash(dto.getTicket_id()).slash("cancel-ticket").withRel("티켓 취소"));
         }
     }
 }
