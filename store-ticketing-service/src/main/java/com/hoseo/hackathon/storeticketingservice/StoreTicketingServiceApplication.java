@@ -36,10 +36,24 @@ public class StoreTicketingServiceApplication {
                 .name("식당")
                 .member(storeAdmin)
                 .build();
+
         memberService.createStoreAdmin(storeAdmin, store);//가게 관리자 + 가게 생성
         adminService.permitStoreAdmin(storeAdmin.getId(), store.getId());   //사이트 관리자가 가입 승인
         storeService.openTicket(storeAdmin.getUsername()); //번호표 발급 허용
         Store findStore = storeService.findStore("storeadmin");
+
+        Member storeAdmin2 = Member.builder()
+                .username("storeadmin2")
+                .password("1234")
+                .build();
+        Store store2 = Store.builder()
+                .name("식당2")
+                .member(storeAdmin2)
+                .build();
+        memberService.createStoreAdmin(storeAdmin2, store2);//가게 관리자 + 가게 생성
+        adminService.permitStoreAdmin(storeAdmin2.getId(), store2.getId());   //사이트 관리자가 가입 승인
+        storeService.openTicket(storeAdmin2.getUsername()); //번호표 발급 허용
+        Store findStore2 = storeService.findStore("storeadmin2");
 
         for(int i = 1; i <= 30; i++) {
             Member member = Member.builder()
@@ -52,6 +66,16 @@ public class StoreTicketingServiceApplication {
             Ticket savedTicket = storeService.createTicket(ticket, findStore.getId(), savedMember.getUsername()); //번호표 발급
 
         }
+        Member member = Member.builder()
+                .username("test")
+                .password("1234")
+                .point(100)
+                .build();
+        Member savedMember = memberService.createMember(member); //회원 생성
+        Ticket ticket = Ticket.builder().peopleCount(5).build();
+        Ticket savedTicket = storeService.createTicket(ticket, findStore2.getId(), savedMember.getUsername()); //번호표 발급
+
+
     }
 
 }
