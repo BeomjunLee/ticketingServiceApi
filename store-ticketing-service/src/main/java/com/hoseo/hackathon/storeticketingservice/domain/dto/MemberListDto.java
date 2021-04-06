@@ -25,16 +25,18 @@ public class MemberListDto {
     private String name;                        //이름
     private String phoneNum;                    //전화번호
     private String email;                           //이메일
+    private int point;                              //포인트
     private LocalDateTime createdDate;             //가입일자
 
     @QueryProjection
-    public MemberListDto(Long ticket_id, Long member_id, String username, String name, String phoneNum, String email, LocalDateTime createdDate) {
+    public MemberListDto(Long ticket_id, Long member_id, String username, String name, String phoneNum, String email, int point, LocalDateTime createdDate) {
         this.ticket_id = ticket_id;
         this.member_id = member_id;
         this.username = username;
         this.name = name;
         this.phoneNum = phoneNum;
         this.email = email;
+        this.point = point;
         this.createdDate = createdDate;
     }
 }

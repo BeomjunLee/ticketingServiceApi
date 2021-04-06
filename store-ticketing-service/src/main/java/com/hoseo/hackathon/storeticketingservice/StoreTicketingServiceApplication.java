@@ -45,6 +45,7 @@ public class StoreTicketingServiceApplication {
             Member member = Member.builder()
                     .username("member"+i)
                     .password("1234")
+                    .point(i)
                     .build();
             Member savedMember = memberService.createMember(member); //회원 생성
             Ticket ticket = Ticket.builder().peopleCount(i).build();

@@ -17,6 +17,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
+import com.hoseo.hackathon.storeticketingservice.repository.condition.StoreSearchCondition;
 import com.hoseo.hackathon.storeticketingservice.service.AdminService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -51,12 +52,14 @@ public class ApiAdminController {
     @ApiOperation(value = "매장 목록 관리[사이트 관리자]", notes = "매장리스트를 조회하고 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores")
-    public ResponseEntity findStores(@RequestParam(defaultValue = "0") int page, PagedResourcesAssembler<StoreListDto> assembler) {
+    public ResponseEntity findStores(@RequestParam(defaultValue = "0") int page,
+                                     PagedResourcesAssembler<StoreListDto> assembler,
+                                     StoreSearchCondition condition) {
         Pageable pageable = PageRequest.of(page, 10);
 
         int totalEnrollStoreCount = adminService.totalEnrollStoreCount();
         AdminStoreManageDto dto = AdminStoreManageDto.builder()
-                .storeList(assembler.toModel(adminService.findStores(StoreStatus.VALID, pageable), e -> new AdminStoreListResource(e)))
+                .storeList(assembler.toModel(adminService.findStores(StoreStatus.VALID, pageable, condition), e -> new AdminStoreListResource(e)))
                 .totalEnrollStoreCount(totalEnrollStoreCount)
                 .build();
         //hateoas
@@ -318,7 +321,7 @@ public class ApiAdminController {
      * @return 회원 관리 dto + hateoas link
      */
     @ApiOperation(value = "회원 관리[사이트 관리자]", notes = "사이트 관리자가 회원 목록을 조회하며 회원을 관리합니다")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/members")
     public ResponseEntity manageMembers(@RequestParam(defaultValue = "0") int page,
                                         PagedResourcesAssembler<MemberListDto> assembler,
@@ -443,17 +446,19 @@ public class ApiAdminController {
 
     /**
      * 가입 승인 신청 매장 목록
-     * @param pageable 페이징
      * @param assembler 페이징 관련 hateoas
      * @return 매장 관리 dto + hateoas link
      */
     @ApiOperation(value = "매장 승인 목록 관리[사이트 관리자]", notes = "가입 대기중인 매장 목록을 조회하고 관리합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/stores/waiting")
-    public ResponseEntity findStoresWaitingToJoin(Pageable pageable, PagedResourcesAssembler<StoreListDto> assembler) {
+    public ResponseEntity findStoresWaitingToJoin(@RequestParam(defaultValue = "0") int page,
+                                                  PagedResourcesAssembler<StoreListDto> assembler,
+                                                  StoreSearchCondition condition) {
+        Pageable pageable = PageRequest.of(page, 10);
         int totalEnrollStoreCount = adminService.totalEnrollStoreCount();
         AdminStoreManageDto dto = AdminStoreManageDto.builder()
-                .storeList(assembler.toModel(adminService.findStores(StoreStatus.INVALID, pageable), e -> new AdminStoreWaitingToJoinListResource(e)))
+                .storeList(assembler.toModel(adminService.findStores(StoreStatus.INVALID, pageable, condition), e -> new AdminStoreWaitingToJoinListResource(e)))
                 .totalEnrollStoreCount(totalEnrollStoreCount)
                 .build();
         //hateoas

@@ -9,11 +9,9 @@ import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateStoreAdm
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
-import com.hoseo.hackathon.storeticketingservice.repository.MemberQueryRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.*;
 import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
+import com.hoseo.hackathon.storeticketingservice.repository.condition.StoreSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,26 +32,18 @@ public class AdminService {
     private final TicketRepository ticketRepository;
     private final StoreRepository storeRepository;
     private final MemberQueryRepository memberQueryRepository;
+    private final StoreQueryRepository storeQueryRepository;
 
 //===============================================매장 관리=============================================
 
     /**
-     * 상태별 매장 목록
+     * 상태별 매장 목록 (매장이름, 매장 전화번호, 매장 주소 검색기능)
      * @param storeStatus 매장 상태
      * @param pageable 페이징
      * @return 페이징 처리된 StoreList dto
      */
-    public Page<StoreListDto> findStores(StoreStatus storeStatus, Pageable pageable) {
-        Page<Store> stores = storeRepository.findAllByStoreStatus(storeStatus, pageable);
-        return stores.map(store -> StoreListDto.builder()
-                .store_id(store.getId())
-                .member_id(store.getMember().getId())
-                .name(store.getName())
-                .phoneNum(store.getPhoneNum())
-                .address(store.getAddress())
-                .createdDate(store.getCreatedDate())
-                .companyNumber(store.getCompanyNumber())
-                .build());
+    public Page<StoreListDto> findStores(StoreStatus storeStatus, Pageable pageable, StoreSearchCondition condition) {
+        return storeQueryRepository.findAllByStoreStatus(storeStatus, pageable, condition);
     }
 
     /**

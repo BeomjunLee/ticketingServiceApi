@@ -9,4 +9,5 @@ public class MemberSearchCondition {
     private String username;
     private String name;
     private String phoneNum;
+    private String orderBy;
 }
