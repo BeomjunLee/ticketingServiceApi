@@ -46,6 +46,7 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")  //양방향 매핑
     private Ticket ticket;
 
+
     //==연관관계 세팅==
     public void changeTicket(Ticket ticket) {
         this.ticket = ticket;

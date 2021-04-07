@@ -219,7 +219,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "매장 번호표 OPEN[매장 관리자]", notes = "매장 번호표 뽑기 기능을 활성화시킵니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/status/open-status")
+    @PostMapping("/open-status")
     public ResponseEntity openTicket(Principal principal) {
         storeService.openTicket(principal.getName());
         Response response = Response.builder()
@@ -237,7 +237,7 @@ public class ApiStoreController {
      */
     @ApiOperation(value = "매장 번호표 CLOSE[매장 관리자]", notes = "매장 번호표 뽑기 기능을 비활성화시킵니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
-    @PostMapping("/status/close-status")
+    @PostMapping("/close-status")
     public ResponseEntity closeTicket(Principal principal) {
         storeService.closeTicket(principal.getName());
         Response response = Response.builder()
@@ -272,7 +272,7 @@ public class ApiStoreController {
      * @param form 매장 상태 정보 form
      * @return http response
      */
-    @ApiOperation(value = "가게 공지사항 수정[가게 관리자]", notes = "가게의 공지사항을 수정할수 있습니다")
+    @ApiOperation(value = "매장 상태 정보 수정[매장 관리자]", notes = "매장의 상태 정보를 수정할수 있습니다")
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
     @PostMapping("/edit-notice")
     public ResponseEntity updateInfo(Principal principal, @RequestBody @Valid StoreInfoForm form) {
@@ -290,19 +290,5 @@ public class ApiStoreController {
      * 가게 수정
      */
 
-//===========================================가게 찾기 메뉴========================================
-
-    /**
-     * 가게 보기
-     */
-
-
-    /**
-     * 가게 상세보기
-     */
-
-    /**
-     * 가게이름으로 검색
-     */
 
 }

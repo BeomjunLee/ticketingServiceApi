@@ -1,6 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.repository;
 
 import com.hoseo.hackathon.storeticketingservice.domain.QStore;
+import com.hoseo.hackathon.storeticketingservice.domain.QTicket;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.QStoreListDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.StoreListDto;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.hoseo.hackathon.storeticketingservice.domain.QMember.member;
+import static com.hoseo.hackathon.storeticketingservice.domain.QStore.*;
 import static com.hoseo.hackathon.storeticketingservice.domain.QStore.store;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -34,12 +36,12 @@ public class StoreQueryRepository {
      * @return
      */
     public Optional<Store> findStoreJoinMemberByUsername(String username) {
-        Store store = queryFactory
-                .selectFrom(QStore.store)
-                .join(QStore.store.member, member)
-                .where(QStore.store.member.username.eq(username)).fetchJoin()
+        Store findStore = queryFactory
+                .selectFrom(store)
+                .join(store.member, member)
+                .where(member.username.eq(username))
                 .fetchOne();
-        return Optional.ofNullable(store);
+        return Optional.ofNullable(findStore);
     }
 
     /**
