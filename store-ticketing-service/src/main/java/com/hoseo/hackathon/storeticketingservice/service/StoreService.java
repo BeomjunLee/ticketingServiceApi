@@ -10,6 +10,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class StoreService {
     private final MemberRepository memberRepository;
     private final TicketRepository ticketRepository;
     private final StoreRepository storeRepository;
+    private final StoreQueryRepository storeQueryRepository;
 
     /**
      * [회원] 번호표 뽑기
@@ -72,7 +74,7 @@ public class StoreService {
      * @param username 매장 관리자 아이디
      */
     public void openTicket(String username) {
-        Store store = storeRepository.findStoreJoinMemberByUsername(username)
+        Store store = storeQueryRepository.findStoreJoinMemberByUsername(username)
                 .orElseThrow(() -> new NotFoundStoreException("관리자의 아이디로 등록된 매장을 찾을수 없습니다"));
         if(store.getStoreStatus().equals(StoreStatus.INVALID) || store.getStoreStatus().equals(StoreStatus.DELETE)){//승인되지 않은 매장 체크
             throw new NotAuthorizedStoreException("승인 되지 않은 매장입니다");
@@ -87,7 +89,7 @@ public class StoreService {
      * @param username 매장 관리자 아이디
      */
     public void closeTicket(String username) {
-        Store store = storeRepository.findStoreJoinMemberByUsername(username)
+        Store store = storeQueryRepository.findStoreJoinMemberByUsername(username)
                 .orElseThrow(() -> new NotFoundStoreException("관리자의 아이디로 등록된 매장을 찾을수 없습니다"));
         if(store.getStoreStatus().equals(StoreStatus.INVALID) || store.getStoreStatus().equals(StoreStatus.DELETE)){//승인되지 않은 가게 체크
             throw new NotAuthorizedStoreException("승인 되지 않은 매장입니다");

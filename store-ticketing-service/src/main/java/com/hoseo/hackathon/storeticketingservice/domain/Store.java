@@ -37,7 +37,7 @@ public class Store {
 
     private LocalDateTime createdDate;        //생성일
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;              //member_id
 

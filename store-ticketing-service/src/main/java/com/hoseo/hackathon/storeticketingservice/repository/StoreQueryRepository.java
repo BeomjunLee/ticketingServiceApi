@@ -1,5 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.repository;
 
+import com.hoseo.hackathon.storeticketingservice.domain.QStore;
+import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.QStoreListDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.StoreListDto;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.hoseo.hackathon.storeticketingservice.domain.QMember.member;
 import static com.hoseo.hackathon.storeticketingservice.domain.QStore.store;
@@ -24,6 +27,20 @@ import static org.springframework.util.StringUtils.hasText;
 public class StoreQueryRepository {
 
     private final JPAQueryFactory queryFactory;
+
+    /**
+     * 관리자의 매장 찾기
+     * @param username 회원 아이디
+     * @return
+     */
+    public Optional<Store> findStoreJoinMemberByUsername(String username) {
+        Store store = queryFactory
+                .selectFrom(QStore.store)
+                .join(QStore.store.member, member)
+                .where(QStore.store.member.username.eq(username)).fetchJoin()
+                .fetchOne();
+        return Optional.ofNullable(store);
+    }
 
     /**
      * 매장 리스트 검색 (이름, 전화번호, 주소)

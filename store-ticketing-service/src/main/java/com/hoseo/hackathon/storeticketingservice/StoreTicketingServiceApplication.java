@@ -11,6 +11,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class StoreTicketingServiceApplication {
@@ -59,6 +60,10 @@ public class StoreTicketingServiceApplication {
             Member member = Member.builder()
                     .username("member"+i)
                     .password("1234")
+                    .name("회원"+i)
+                    .phoneNum("010-"+i)
+                    .email("email"+i+"@email.com")
+                    .createdDate(LocalDateTime.now())
                     .point(i)
                     .build();
             Member savedMember = memberService.createMember(member); //회원 생성
@@ -69,6 +74,10 @@ public class StoreTicketingServiceApplication {
         Member member = Member.builder()
                 .username("test")
                 .password("1234")
+                .name("회원")
+                .phoneNum("01012341234")
+                .email("email@email.com")
+                .createdDate(LocalDateTime.now())
                 .point(100)
                 .build();
         Member savedMember = memberService.createMember(member); //회원 생성

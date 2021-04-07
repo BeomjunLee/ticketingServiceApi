@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -43,7 +45,7 @@ class StoreServiceTest {
     @Autowired
     AdminService adminService;
 
-    @BeforeEach
+//    @BeforeEach
     public void createStore() {
         Member storeAdmin = Member.builder()
                 .username("storeadmin")
@@ -66,7 +68,7 @@ class StoreServiceTest {
     }
     
     @Test
-    public void 번호표뽑기_중복뽑기_번호표조회_CLOSE상태뽑기불가_번호표취소() throws Exception{
+    public void 번호표뽑기_중복뽑기_번호표조회_CLOSE_상태뽑기불가_번호표취소() throws Exception{
         //given
         Ticket ticket = Ticket.builder()
                 .peopleCount(5)
@@ -102,4 +104,8 @@ class StoreServiceTest {
         assertEquals(0, findStore.getTotalWaitingTime());//총 대기 시간 0분
     }
 
+    @Test
+    void fetchTest() {
+        storeService.closeTicket("storeadmin");
+    }
 }

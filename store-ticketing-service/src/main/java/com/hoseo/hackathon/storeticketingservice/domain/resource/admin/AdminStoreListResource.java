@@ -12,7 +12,7 @@ public class AdminStoreListResource extends EntityModel<StoreListDto> {
         super(dto, links);
         add(linkTo(ApiAdminController.class).slash("stores")
                 .slash(dto.getStore_id())
-                .slash("authorization")
+                .slash("members")
                 .slash(dto.getMember_id())
                 .slash("cancel-join")
                 .withRel("매장 승인 취소"));

@@ -464,7 +464,6 @@ public class ApiAdminController {
         return ResponseEntity.ok(resource);
     }
 
-
     /**
      * 매장 가입 승인
      * @param store_id 매장 고유 id 값
@@ -473,7 +472,7 @@ public class ApiAdminController {
      */
     @ApiOperation(value = "매장 가입 승인[사이트 관리자]", notes = "가입 대기중인 매장을 승인합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/authorization/{member_id}/permit-join")
+    @PostMapping("/stores/{store_id}/members/{member_id}/permit-join")
     public ResponseEntity permitStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
         adminService.permitStoreAdmin(member_id, store_id);
 
@@ -493,7 +492,7 @@ public class ApiAdminController {
      */
     @ApiOperation(value = "매장 가입 취소[사이트 관리자]", notes = "가입 대기중인 매장의 승인을 취소합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/authorization/{member_id}/cancel-join")
+    @PostMapping("/stores/{store_id}/members/{member_id}/cancel-join")
     public ResponseEntity rejectStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
         adminService.rejectStoreAdmin(member_id, store_id);
         Response response = Response.builder()

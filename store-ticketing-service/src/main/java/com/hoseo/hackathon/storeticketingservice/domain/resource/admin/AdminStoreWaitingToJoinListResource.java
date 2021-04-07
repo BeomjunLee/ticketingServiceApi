@@ -13,7 +13,7 @@ public class AdminStoreWaitingToJoinListResource extends EntityModel<StoreListDt
         add(linkTo(ApiAdminController.class).slash("stores").slash(dto.getStore_id()).slash("members").slash(dto.getMember_id()).withRel("매장 관리자 정보보기"));
         add(linkTo(ApiAdminController.class).slash("stores")
                 .slash(dto.getStore_id())
-                .slash("/authorization")
+                .slash("members")
                 .slash(dto.getMember_id())
                 .slash("permit-join")
                 .slash(dto.getMember_id()).withRel("가입 승인"));

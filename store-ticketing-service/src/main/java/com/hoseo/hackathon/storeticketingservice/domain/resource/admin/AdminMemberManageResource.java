@@ -13,7 +13,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class AdminMemberManageResource extends EntityModel<AdminMemberManageDto> {
     public AdminMemberManageResource(AdminMemberManageDto dto, Link... links) {
         super(dto, links);
-        add(linkTo(ApiStoreController.class).slash("members").withSelfRel());
         add(linkTo(ApiStoreController.class).slash("delete-members").withRel("탈퇴후 7일지난 회원 영구삭제"));
     }
 }
