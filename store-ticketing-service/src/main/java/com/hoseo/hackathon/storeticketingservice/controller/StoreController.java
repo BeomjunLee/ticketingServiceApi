@@ -1,10 +1,9 @@
-package com.hoseo.hackathon.storeticketingservice.api;
+package com.hoseo.hackathon.storeticketingservice.controller;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.Ticket;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.HoldingMembersDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.WaitingMembersDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.StoreManageDto;
-import com.hoseo.hackathon.storeticketingservice.domain.form.AvgTimeForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.TicketForm;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.HoldingMembersResource;
@@ -35,7 +34,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * 매장용
  */
-public class ApiStoreController {
+public class StoreController {
 
     private final StoreService storeService;
 
@@ -58,7 +57,7 @@ public class ApiStoreController {
 
         storeService.createTicket(ticket, store_id, principal.getName());
 
-        URI createdUri = linkTo(ApiStoreController.class).slash(store_id).slash("tickets/new").toUri();
+        URI createdUri = linkTo(StoreController.class).slash(store_id).slash("tickets/new").toUri();
 
         Response response = Response.builder()
                 .result("success")

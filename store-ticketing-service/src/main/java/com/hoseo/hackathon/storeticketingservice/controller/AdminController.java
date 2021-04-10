@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.api;
+package com.hoseo.hackathon.storeticketingservice.controller;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
@@ -37,7 +37,7 @@ import javax.validation.Valid;
 /**
  * 사이트 관리자용
  */
-public class ApiAdminController {
+public class AdminController {
     private final AdminService adminService;
 
 //========================================매장 관리============================================

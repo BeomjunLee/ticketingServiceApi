@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.api;
+package com.hoseo.hackathon.storeticketingservice.controller;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
@@ -32,7 +32,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/members", produces = MediaTypes.HAL_JSON_VALUE)
-public class ApiMemberController {
+public class MemberController {
 
     private final MemberService memberService;
     private final StoreService storeService;
@@ -70,7 +70,7 @@ public class ApiMemberController {
                 .status(201)
                 .message("회원가입 성공")
                 .build();
-        URI createUri = linkTo(ApiMemberController.class).slash("new").toUri();
+        URI createUri = linkTo(MemberController.class).slash("new").toUri();
         return ResponseEntity.created(createUri).body(response);
     }
 
@@ -105,7 +105,7 @@ public class ApiMemberController {
                 .status(201)
                 .message("관리자 가입 성공")
                 .build();
-        URI createUri = linkTo(ApiMemberController.class).slash("admin/new").toUri();
+        URI createUri = linkTo(MemberController.class).slash("admin/new").toUri();
         return ResponseEntity.created(createUri).body(response);
     }
 

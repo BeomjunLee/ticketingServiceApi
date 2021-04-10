@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.api;
+package com.hoseo.hackathon.storeticketingservice.controller;
 
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
-public class ApiErrorController {
+public class ErrorController {
 
     /**
      * Valid 에러
