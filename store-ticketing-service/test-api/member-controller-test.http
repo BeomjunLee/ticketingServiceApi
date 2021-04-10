@@ -1,8 +1,14 @@
 ##로그인
-POST http://localhost:8080/api/tokens
+POST http://localhost:8080/api/members/login
 Content-Type: application/json
 
 {"username":"member1","password":"1234"}
+
+### accessToken 재발급
+POST http://localhost:8080/api/members/refreshToken
+Content-Type: application/json
+
+{"grantType":"refreshToken","refreshToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZW1iZXIxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJleHAiOjE2MTgxNTQ0Mjd9.ll5Ddvso7kIFWiWpHanyAnFLGp4Seq2T0XhkfmlII74"}
 
 ###회원 가입 테스트
 POST http://localhost:8080/api/members/new
@@ -17,9 +23,9 @@ Content-Type: application/json
 ###회원 번호표 조회 테스트
 GET http://localhost:8080/api/members/tickets
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMzM1OTY2OCwidXNlcm5hbWUiOiJ0ZXN0In0.l8ym-QivMiThPNfAmKztTbxbc8Nlv53VWU9nNzXxgkE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtZW1iZXIxIiwicm9sZXMiOiJST0xFX1VTRVIiLCJleHAiOjE2MTgwNjgzNDV9.DjKsKNOOwCyeG_5BjkBAjM1teNWrSvlc2jYIxmeuWqY
 
-{"grant_type":"refresh_token"}
+
 
 ###회원 번호표 취소 테스트
 DELETE http://localhost:8080/api/members/tickets

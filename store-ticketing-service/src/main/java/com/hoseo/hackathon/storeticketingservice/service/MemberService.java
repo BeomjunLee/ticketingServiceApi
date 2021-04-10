@@ -2,58 +2,114 @@ package com.hoseo.hackathon.storeticketingservice.service;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
+import com.hoseo.hackathon.storeticketingservice.domain.form.RefreshTokenForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
+import com.hoseo.hackathon.storeticketingservice.domain.response.LoginResponse;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
+import com.hoseo.hackathon.storeticketingservice.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true) //조회최적화
 @RequiredArgsConstructor    //스프링 주입
-public class MemberService{
+public class MemberService implements UserDetailsService {
 
+    private final Logger log = LoggerFactory.getLogger(MemberService.class);
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+
 
     /**
-     * 로그인체크
+     * 로그인 요청 회원 찾기
+     * @param username 요청 아이디
+     * @return 회원 정보 넣은 security User 객체
+     * @throws UsernameNotFoundException
      */
-    public Member loginCheck(String username, String password) {
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + "에 해당되는 유저를 찾을수 없습니다"));
-        if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치 하지않습니다");
-        } else return member;
+    @Override
+    public UserDetails loadUserByUsername(String username){
+        log.info("로그인 요청 회원 찾기");
+        Member member = memberRepository.findMemberByUsernameFetch(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
+
+        return new User(member.getUsername(), member.getPassword(), authorities(member.getRoles()));
+    }
+
+    private Collection<? extends GrantedAuthority> authorities(Set<MemberRole> roles) {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .collect(Collectors.toList());
     }
 
     /**
-     * 로그인 성공시 refreshToken 저장 및 갱신
+     * 회원에게 refreshToken 저장
+     * @param username 요청 아이디
+     * @param refreshToken refreshToken 값
      */
     @Transactional
-    public void updateRefreshToken(String username, String refreshToken) {
+    public void findMemberAndSaveRefreshToken(String username, String refreshToken) {
         Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + "에 해당되는 유저를 찾을수 없습니다"));
-        member.changeRefreshToken(refreshToken);
+                .orElseThrow(() -> new UsernameNotFoundException(username + " 아이디가 일치하지 않습니다"));
+        member.updateRefreshToken(refreshToken);
     }
 
     /**
-     * DB에 저장된 refreshToken 값
+     * refreshToken 으로 accessToken 재발급
+     * @param refreshTokenForm accessToken 재발급 요청 form
+     * @return json response
      */
-    public boolean checkRefreshToken(String username, String refreshToken) {
-        String findRefreshToken = memberRepository.findRefreshToken(username).orElseThrow(() -> new NotFoundRefreshTokenException("회원의 refresh_token을 찾을 수 없습니다"));
-        if (refreshToken.equals(findRefreshToken)) return true;
-        else throw new NotMatchedRefreshTokenException("요청된 refresh_token이 회원의 refresh_token과 일치하지 않습니다");
-    }
+    @Transactional
+    public LoginResponse refreshToken(RefreshTokenForm refreshTokenForm) {
+        if (!refreshTokenForm.getGrantType().equals("refreshToken"))
+            throw new RefreshTokenGrantTypeException("올바른 grantType 을 입력해주세요");
 
+        Authentication authentication = jwtProvider.getAuthentication(refreshTokenForm.getRefreshToken());
+
+        Member member = memberRepository.findMemberByUsernameAndRefreshToken(authentication.getName(), refreshTokenForm.getRefreshToken())
+                .orElseThrow(() -> new InvalidRefreshTokenException("유효하지 않은 리프레시 토큰입니다"));
+        //TODO InvalidRefreshTokenException 예외 Handler
+
+        //jwt accessToken & refreshToken 발급
+        String accessToken = jwtProvider.generateToken(authentication, false);
+        String refreshToken = jwtProvider.generateToken(authentication, true);
+
+        //refreshToken 저장 (refreshToken 은 한번 사용후 폐기)
+        member.updateRefreshToken(refreshToken);
+
+        LoginResponse response = LoginResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("accessToken 재발급 성공")
+                .accessToken(accessToken)
+                .expiredAt(LocalDateTime.now().plusSeconds(jwtProvider.getAccessTokenValidMilliSeconds()/1000))
+                .refreshToken(refreshToken)
+                .issuedAt(LocalDateTime.now())
+                .build();
+        return response;
+    }
 
     /**
      * 비밀번호 변경
@@ -95,7 +151,7 @@ public class MemberService{
     @Transactional //조회가 아니므로 Transactional
     public Member createMember(Member member) {
         validateDuplicateMember(member.getUsername()); //중복회원검증
-        member.changeRole(Role.USER);   //권한부여
+        member.addRole(MemberRole.USER);   //권한부여
         member.changeMemberStatus(MemberStatus.VALID);  //일반 회원은 바로 가입
         //비밀번호 encoding
         member.encodingPassword(passwordEncoder.encode(member.getPassword()));
@@ -110,7 +166,7 @@ public class MemberService{
         validateDuplicateMember(member.getUsername()); //중복회원검증
         validateDuplicateStore(store.getName());       //중복 가게명 검증
 
-        member.changeRole(Role.STORE_ADMIN); //권한부여
+        member.addRole(MemberRole.STORE_ADMIN); //권한부여
         member.changeMemberStatus(MemberStatus.INVALID); //가게 관리자는 가입 대기상태
         //비밀번호 encoding
         member.encodingPassword(passwordEncoder.encode(member.getPassword()));
@@ -133,7 +189,7 @@ public class MemberService{
     @Transactional //조회가 아니므로 Transactional
     public void createAdmin(Member member) {
         validateDuplicateMember(member.getUsername()); //중복회원검증
-        member.changeRole(Role.ADMIN); //권한부여
+        member.addRole(MemberRole.ADMIN); //권한부여
         member.changeMemberStatus(MemberStatus.ADMIN); //가게 관리자는 가입 대기상태
         //비밀번호 encoding
         member.encodingPassword(passwordEncoder.encode(member.getPassword()));
