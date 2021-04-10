@@ -62,7 +62,6 @@ public class Ticket {
         ticket.setMember(member);   //연관관계 세팅
 
         store.changeStoreByTicketing(store.getTotalWaitingCount());   //Store 갱신
-
     }
 
     /**

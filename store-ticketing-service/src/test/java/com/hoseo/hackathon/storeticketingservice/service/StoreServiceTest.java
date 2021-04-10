@@ -112,9 +112,11 @@ class StoreServiceTest {
     @Test
     @DisplayName("번호표 뽑기")
     void createTicket() {
+        Store store = storeRepository.findStoreJoinMemberByUsername("storeadmin2").get();
+
         Ticket ticket = Ticket.builder()
                 .peopleCount(5)
                 .build();
-        storeService.createTicket(ticket, 2L, "test");
+        storeService.createTicket(ticket, store.getId(), "test");
     }
 }

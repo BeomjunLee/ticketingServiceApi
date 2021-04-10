@@ -27,8 +27,11 @@ public class StoreTicketingServiceApplication {
     @Autowired
     StoreService storeService;
 
+
+    //테스트 데이터
     @PostConstruct
     public void createTicket() {
+        //매장1
         Member storeAdmin = Member.builder()
                 .username("storeadmin")
                 .password("1234")
@@ -39,11 +42,13 @@ public class StoreTicketingServiceApplication {
                 .avgWaitingTimeByOne(10)
                 .build();
 
+
         memberService.createStoreAdmin(storeAdmin, store);//가게 관리자 + 가게 생성
         adminService.permitStoreAdmin(storeAdmin.getId(), store.getId());   //사이트 관리자가 가입 승인
         storeService.openTicket(storeAdmin.getUsername()); //번호표 발급 허용
         Store findStore = storeService.findStore("storeadmin");
 
+        //매장2
         Member storeAdmin2 = Member.builder()
                 .username("storeadmin2")
                 .password("1234")
@@ -52,11 +57,13 @@ public class StoreTicketingServiceApplication {
                 .name("식당2")
                 .member(storeAdmin2)
                 .build();
+
         memberService.createStoreAdmin(storeAdmin2, store2);//가게 관리자 + 가게 생성
         adminService.permitStoreAdmin(storeAdmin2.getId(), store2.getId());   //사이트 관리자가 가입 승인
         storeService.openTicket(storeAdmin2.getUsername()); //번호표 발급 허용
         Store findStore2 = storeService.findStore("storeadmin2");
 
+        //매장1에 번호표 발급
         for(int i = 1; i <= 30; i++) {
             Member member = Member.builder()
                     .username("member"+i)
@@ -72,6 +79,8 @@ public class StoreTicketingServiceApplication {
             Ticket savedTicket = storeService.createTicket(ticket, findStore.getId(), savedMember.getUsername()); //번호표 발급
 
         }
+
+        //매장2에 번호표 발급
         Member member = Member.builder()
                 .username("test")
                 .password("1234")
