@@ -13,6 +13,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.*;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.admin.*;
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
+import com.hoseo.hackathon.storeticketingservice.domain.response.ResultStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
@@ -124,7 +125,7 @@ public class AdminController {
     public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdTicket(store_id, ticket_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 보류 성공")
                 .build();
@@ -143,7 +144,7 @@ public class AdminController {
     public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.cancelTicketByAdmin(store_id, ticket_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 취소 성공")
                 .build();
@@ -162,7 +163,7 @@ public class AdminController {
     public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.checkTicket(store_id, ticket_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 체크 성공")
                 .build();
@@ -181,7 +182,7 @@ public class AdminController {
     public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdCancelTicket(store_id, ticket_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 취소 성공")
                 .build();
@@ -200,7 +201,7 @@ public class AdminController {
     public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdCheckTicket(store_id, ticket_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 체크 성공")
                 .build();
@@ -217,12 +218,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/open-status")
     public ResponseEntity openTicket(@PathVariable("store_id")Long store_id) {
         adminService.openTicket(store_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 번호표 활성화 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -236,7 +237,7 @@ public class AdminController {
     public ResponseEntity closeTicket(@PathVariable("store_id")Long store_id) {
         adminService.closeTicket(store_id);
         Response response = Response.builder()
-                .result("success")
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 번호표 비활성화 성공")
                 .build();
