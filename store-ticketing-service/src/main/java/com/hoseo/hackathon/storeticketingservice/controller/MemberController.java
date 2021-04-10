@@ -11,6 +11,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.resource.MemberResource;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.MyTicketResource;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.StoreAdminResource;
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
+import com.hoseo.hackathon.storeticketingservice.domain.response.ResultStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
 import com.hoseo.hackathon.storeticketingservice.service.MemberService;
 import com.hoseo.hackathon.storeticketingservice.service.StoreService;
@@ -41,12 +42,11 @@ public class MemberController {
      */
     @GetMapping("/test")
     public ResponseEntity member() {
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(201)
                 .message("테스트 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -65,13 +65,13 @@ public class MemberController {
                 .deletedDate(null)  //탈퇴일은 가입시 null(재가입시 null 로 바꿔야돼서)
                 .build();
         memberService.createMember(member);
-        Response response = Response.builder()
-                .result("success")
-                .status(201)
-                .message("회원가입 성공")
-                .build();
+
         URI createUri = linkTo(MemberController.class).slash("new").toUri();
-        return ResponseEntity.created(createUri).body(response);
+        return ResponseEntity.created(createUri).body(Response.builder()
+                                                        .result(ResultStatus.SUCCESS)
+                                                        .status(201)
+                                                        .message("회원가입 성공")
+                                                        .build());
     }
 
     /**
@@ -100,13 +100,13 @@ public class MemberController {
                 .build();
 
         memberService.createStoreAdmin(member, store);
-        Response response = Response.builder()
-                .result("success")
-                .status(201)
-                .message("관리자 가입 성공")
-                .build();
         URI createUri = linkTo(MemberController.class).slash("admin/new").toUri();
-        return ResponseEntity.created(createUri).body(response);
+
+        return ResponseEntity.created(createUri).body(Response.builder()
+                                                        .result(ResultStatus.SUCCESS)
+                                                        .status(201)
+                                                        .message("관리자 가입 성공")
+                                                        .build());
     }
 
     /**
@@ -117,7 +117,7 @@ public class MemberController {
     @GetMapping("/me")
     public ResponseEntity myInfo(Principal principal) {
         Member member = memberService.findByUsername(principal.getName());
-        if (member.getRole().equals(Role.USER)){    //회원
+        if (member.getRole() ==Role.USER){    //회원
             MemberDto dto = MemberDto.builder()
                     .username(member.getUsername())
                     .name(member.getName())
@@ -128,7 +128,7 @@ public class MemberController {
             MemberResource resource = new MemberResource(dto);
             return ResponseEntity.ok(resource);
 
-            }else if (member.getRole().equals(Role.STORE_ADMIN)) {  //가게 관리자
+            }else if (member.getRole() == Role.STORE_ADMIN) {  //가게 관리자
             Store store = storeService.findStore(member.getUsername());
             StoreAdminDto dto = StoreAdminDto.builder()
                     .member_id(member.getId())
@@ -147,12 +147,11 @@ public class MemberController {
             return ResponseEntity.ok(resource);
         }
 
-        Response response = Response.builder()
-                .result("fail")
-                .status(404)
-                .message("회원 조회 오류")
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.builder()
+                                                                    .result(ResultStatus.FAIL)
+                                                                    .status(404)
+                                                                    .message("회원 조회 오류")
+                                                                    .build());
     }
 
 
@@ -166,31 +165,29 @@ public class MemberController {
                                        @RequestBody @Valid UpdateMemberForm memberForm,
                                        @RequestBody @Valid UpdateStoreAdminForm storeForm) {
         Member member = memberService.findByUsername(principal.getName());
-        if (member.getRole().equals(Role.USER)){    //회원
-            memberService.updateMember(principal.getName(), memberForm);
-            Response response = Response.builder()
-                    .result("success")
-                    .status(200)
-                    .message("회원 수정 완료")
-                    .build();
-            return ResponseEntity.ok(response);
 
-        }else if (member.getRole().equals(Role.STORE_ADMIN)) {  //가게 관리자
-            memberService.updateStoreAdmin(principal.getName(), storeForm);
-            Response response = Response.builder()
-                    .result("success")
+        if (member.getRole() == Role.USER){    //회원
+            memberService.updateMember(principal.getName(), memberForm);
+            return ResponseEntity.ok(Response.builder()
+                    .result(ResultStatus.SUCCESS)
                     .status(200)
                     .message("회원 수정 완료")
-                    .build();
-            return ResponseEntity.ok(response);
+                    .build());
+
+        }else if (member.getRole() == Role.STORE_ADMIN) {  //가게 관리자
+            memberService.updateStoreAdmin(principal.getName(), storeForm);
+            return ResponseEntity.ok(Response.builder()
+                    .result(ResultStatus.SUCCESS)
+                    .status(200)
+                    .message("회원 수정 완료")
+                    .build());
         }
 
-        Response response = Response.builder()
-                .result("fail")
-                .status(404)
-                .message("회원 수정 오류")
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Response.builder()
+                                                                    .result(ResultStatus.FAIL)
+                                                                    .status(404)
+                                                                    .message("회원 수정 오류")
+                                                                    .build());
     }
 
     /**
@@ -201,12 +198,12 @@ public class MemberController {
     @PatchMapping("/me/change-password")
     public ResponseEntity changePassword(Principal principal, @RequestBody @Valid UpdatePasswordForm form) {
         memberService.changePassword(principal.getName(), form.getCurrentPassword(), form.getNewPassword());
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("비밀번호 변경 완료")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
 
@@ -229,8 +226,8 @@ public class MemberController {
                 .waitingNum(ticket.getWaitingNum())
                 .waitingTime(ticket.getWaitingTime())
                 .build();
-        MyTicketResource resource = new MyTicketResource(dto);
-        return ResponseEntity.ok(resource);
+
+        return ResponseEntity.ok(new MyTicketResource(dto));
     }
 
     /**
@@ -241,15 +238,11 @@ public class MemberController {
     @PostMapping("/tickets/cancel-ticket")
     public ResponseEntity cancelMyTicket(Principal principal) {
         storeService.cancelTicket(principal.getName());
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
-
-    /**
-     * [회원] 포인트 기부하기
-     */
 }
