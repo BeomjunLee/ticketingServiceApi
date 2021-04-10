@@ -10,6 +10,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.resource.HoldingMembersR
 import com.hoseo.hackathon.storeticketingservice.domain.resource.WaitingMembersAndStoreManageResource;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.WaitingMembersResource;
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
+import com.hoseo.hackathon.storeticketingservice.domain.response.ResultStatus;
 import com.hoseo.hackathon.storeticketingservice.service.StoreService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +60,11 @@ public class StoreController {
 
         URI createdUri = linkTo(StoreController.class).slash(store_id).slash("tickets/new").toUri();
 
-        Response response = Response.builder()
-                .result("success")
-                .status(200)
-                .message("번호표 발급 성공")
-                .build();
-        return ResponseEntity.created(createdUri).body(response);
+        return ResponseEntity.created(createdUri).body(Response.builder()
+                                                        .result(ResultStatus.SUCCESS)
+                                                        .status(200)
+                                                        .message("번호표 발급 성공")
+                                                        .build());
     }
 
     //===========================================가게 번호표 관리 메뉴========================================
@@ -92,8 +92,7 @@ public class StoreController {
                 //TODO 보류회원 결정나면 작업
                 .build();
         //hateoas
-        WaitingMembersAndStoreManageResource resource = new WaitingMembersAndStoreManageResource(dto);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new WaitingMembersAndStoreManageResource(dto));
     }
 
     /**
@@ -127,12 +126,12 @@ public class StoreController {
     @PostMapping("/tickets/{ticket_id}/check-ticket")
     public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.checkTicket(principal.getName(), ticket_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 체크 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -146,12 +145,12 @@ public class StoreController {
     @PostMapping("/tickets/{ticket_id}/cancel-ticket")
     public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.cancelTicketByAdmin(principal.getName(), ticket_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -165,12 +164,12 @@ public class StoreController {
     @PostMapping("/tickets/{ticket_id}/hold-ticket")
     public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdTicket(principal.getName(), ticket_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 보류 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -184,12 +183,12 @@ public class StoreController {
     @PostMapping("/tickets/{ticket_id}/check-holdingTicket")
     public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdCheckTicket(principal.getName(), ticket_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 체크 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -203,12 +202,12 @@ public class StoreController {
     @PostMapping("/tickets/{ticket_id}/cancel-holdingTicket")
     public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
         storeService.holdCancelTicket(principal.getName(), ticket_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -221,12 +220,12 @@ public class StoreController {
     @PostMapping("/open-status")
     public ResponseEntity openTicket(Principal principal) {
         storeService.openTicket(principal.getName());
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 번호표 활성화 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -239,12 +238,12 @@ public class StoreController {
     @PostMapping("/close-status")
     public ResponseEntity closeTicket(Principal principal) {
         storeService.closeTicket(principal.getName());
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 번호표 비활성화 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -257,12 +256,12 @@ public class StoreController {
     @PostMapping("/apply-errors")
     public ResponseEntity sendErrorSystem(Principal principal) {
         storeService.sendErrorSystem(principal.getName());
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("오류접수 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -277,17 +276,12 @@ public class StoreController {
     public ResponseEntity updateInfo(Principal principal, @RequestBody @Valid StoreInfoForm form) {
         storeService.updateStoreInfo(principal.getName(), form);
 
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
-                .message("공지사항 변경 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .message("매장 상태 정보 변경 성공")
+                .build());
     }
-
-    /**
-     * 가게 수정
-     */
 
 
 }
