@@ -116,7 +116,7 @@ public class MemberService{
         member.encodingPassword(passwordEncoder.encode(member.getPassword()));
 
         store.changeErrorStatus(ErrorStatus.GOOD);
-        store.changeStoreTicketStatus(StoreTicketStatus.CLOSE); //번호표 발급 비활성화
+        store.changeStoreTicketStatusClose(); //번호표 발급 비활성화
         store.changeStoreStatus(StoreStatus.INVALID);  //승인 대기
 
         memberRepository.save(member);

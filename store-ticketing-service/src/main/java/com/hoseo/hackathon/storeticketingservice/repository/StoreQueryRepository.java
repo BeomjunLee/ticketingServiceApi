@@ -31,6 +31,22 @@ public class StoreQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     /**
+     * 매장, 회원 조인 -> member_id, store_id 같은 스토어 객체 한번에 조회
+     * @param member_id
+     * @param store_id
+     * @return
+     */
+    public Optional<Store> findStoreJoinMember(Long member_id, Long store_id) {
+        Store findStore = queryFactory
+                .selectFrom(QStore.store)
+                .join(QStore.store.member, member).fetchJoin()
+                .where(QStore.store.id.eq(store_id),
+                        QStore.store.member.id.eq(member_id))
+                .fetchOne();
+        return Optional.ofNullable(findStore);
+    }
+
+    /**
      * 관리자의 매장 찾기
      * @param username 회원 아이디
      * @return

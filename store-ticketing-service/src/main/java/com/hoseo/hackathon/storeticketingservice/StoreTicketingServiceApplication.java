@@ -36,6 +36,7 @@ public class StoreTicketingServiceApplication {
         Store store = Store.builder()
                 .name("식당")
                 .member(storeAdmin)
+                .avgWaitingTimeByOne(10)
                 .build();
 
         memberService.createStoreAdmin(storeAdmin, store);//가게 관리자 + 가게 생성
@@ -82,7 +83,7 @@ public class StoreTicketingServiceApplication {
                 .build();
         Member savedMember = memberService.createMember(member); //회원 생성
         Ticket ticket = Ticket.builder().peopleCount(5).build();
-        Ticket savedTicket = storeService.createTicket(ticket, findStore2.getId(), savedMember.getUsername()); //번호표 발급
+//        Ticket savedTicket = storeService.createTicket(ticket, findStore2.getId(), savedMember.getUsername()); //번호표 발급
 
 
     }

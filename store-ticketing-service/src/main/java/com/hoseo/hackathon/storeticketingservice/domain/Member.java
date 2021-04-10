@@ -1,6 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
+import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -46,10 +47,17 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")  //양방향 매핑
     private Ticket ticket;
 
-
     //==연관관계 세팅==
     public void changeTicket(Ticket ticket) {
         this.ticket = ticket;
+    }
+
+    /**
+     * 번호표 검증
+     */
+    public void verifyTicket() {
+        if(getTicket() != null)
+            throw new DuplicateTicketingException("이미 번호표를 가지고 있습니다");
     }
 
     //refreshToken 갱신

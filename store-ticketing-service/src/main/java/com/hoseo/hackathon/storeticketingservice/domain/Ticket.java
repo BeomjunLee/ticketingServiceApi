@@ -1,6 +1,8 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
+import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
+import com.hoseo.hackathon.storeticketingservice.exception.IsAlreadyCompleteException;
 import lombok.*;
 
 import javax.jdo.annotations.Unique;
@@ -40,6 +42,61 @@ public class Ticket {
         this.peopleCount = peopleCount;
     }
 
+    /**
+     * 번호표 발급
+     */
+    public static void createTicket(Ticket ticket, Store store, Member member) {
+        store.verifyStoreStatus();  //승인되지 않은 매장 체크
+        store.verifyStoreTicketStatus();//번호표 발급 활성화 상태 체크
+        member.verifyTicket();//번호표 중복 뽑기 체크
+
+        int totalWaitingCount = store.getTotalWaitingCount();
+
+        //번호표 세팅
+        ticket.changeTicket(ticket.getPeopleCount(),                                       //인원수(Controller)
+                totalWaitingCount + 1,                                          //대기번호
+                store.getAvgWaitingTimeByOne() * (totalWaitingCount + 1),       //대기시간
+                LocalDateTime.now(),                                                      //발급시간
+                TicketStatus.VALID);                                                     //번호표 상태
+        ticket.setStore(store);
+        ticket.setMember(member);   //연관관계 세팅
+
+        store.changeStoreByTicketing(store.getTotalWaitingCount());   //Store 갱신
+
+    }
+
+    /**
+     * 번호표 취소
+     */
+    public void cancelTicket(Store store) {
+        if (getStatus() == TicketStatus.CANCEL)
+            throw new IsAlreadyCompleteException("이미 취소처리 되었습니다");
+
+        changeStatusTicket(TicketStatus.CANCEL); //번호표 상태 변경
+        store.changeStoreByCancelOrNext(store.getTotalWaitingCount()); //Store 갱신
+    }
+
+    /**
+     * 번호표 체크
+     */
+    public void checkTicket(Store store) {
+        if (getStatus() == TicketStatus.INVALID)
+            throw new IsAlreadyCompleteException("이미 체크처리 되었습니다");
+
+        changeStatusTicket(TicketStatus.INVALID); //번호표 상태 변경
+        store.changeStoreByCancelOrNext(store.getTotalWaitingCount()); //Store 갱신
+    }
+
+    /**
+     * 번호표 보류
+     */
+    public void holdTicket(Store store) {
+        if (getStatus() == TicketStatus.HOLD)
+            throw new IsAlreadyCompleteException("이미 보류처리 되었습니다");
+        changeStatusTicket(TicketStatus.HOLD); //번호표 상태 변경
+        store.changeStoreByCancelOrNext(store.getTotalWaitingCount()); //Store 갱신
+    }
+
     //항목 추가 메서드
     public void changeTicket(int peopleCount, int waitingNum, int waitingTime, LocalDateTime createdDate, TicketStatus status) {
         this.peopleCount = peopleCount;
@@ -62,7 +119,7 @@ public class Ticket {
     }
 
     //==비지니스 로직==
-    //티켓 취소
+    //번호표 상태 변경
     public void changeStatusTicket(TicketStatus status) {
         this.status = status;
     }

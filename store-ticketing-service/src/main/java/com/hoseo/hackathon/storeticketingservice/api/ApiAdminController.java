@@ -9,7 +9,6 @@ import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminStoreAdmi
 import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminStoreManageDto;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateStoreAdminForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.AvgTimeForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.*;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.admin.*;
@@ -21,7 +20,6 @@ import com.hoseo.hackathon.storeticketingservice.repository.condition.StoreSearc
 import com.hoseo.hackathon.storeticketingservice.service.AdminService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -494,7 +492,7 @@ public class ApiAdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/stores/{store_id}/members/{member_id}/cancel-join")
     public ResponseEntity rejectStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
-        adminService.rejectStoreAdmin(member_id, store_id);
+        adminService.cancelPermitStoreAdmin(member_id, store_id);
         Response response = Response.builder()
                 .result("success")
                 .status(200)

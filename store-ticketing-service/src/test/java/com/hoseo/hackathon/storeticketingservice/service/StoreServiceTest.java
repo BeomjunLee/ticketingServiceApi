@@ -108,4 +108,13 @@ class StoreServiceTest {
     void fetchTest() {
         storeService.closeTicket("storeadmin");
     }
+
+    @Test
+    @DisplayName("번호표 뽑기")
+    void createTicket() {
+        Ticket ticket = Ticket.builder()
+                .peopleCount(5)
+                .build();
+        storeService.createTicket(ticket, 2L, "test");
+    }
 }

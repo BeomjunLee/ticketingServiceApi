@@ -1,7 +1,10 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 import com.hoseo.hackathon.storeticketingservice.domain.status.ErrorStatus;
+import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus;
+import com.hoseo.hackathon.storeticketingservice.exception.NotAuthorizedStoreException;
+import com.hoseo.hackathon.storeticketingservice.exception.StoreTicketIsCloseException;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -47,6 +50,36 @@ public class Store {
     }
 
     //=========================비지니스로직=====================
+
+    /**
+     * 매장 관리자 가입 승인
+     */
+    public void permitStoreAdmin() {
+        member.changeMemberStatus(MemberStatus.VALID);
+        changeStoreStatus(StoreStatus.VALID);
+        changeCreatedDate(LocalDateTime.now());
+    }
+
+    /**
+     * 매장 관리자 가입 승인 취소
+     */
+    public void cancelPermitStoreAdmin() {
+        member.changeMemberStatus(MemberStatus.INVALID);
+        changeStoreStatus(StoreStatus.INVALID);
+    }
+
+    //매장 승인 상태 검증
+    public void verifyStoreStatus() {
+        if(getStoreStatus() != StoreStatus.VALID)
+            throw new NotAuthorizedStoreException("승인 되지 않은 매장입니다");
+    }
+
+    //번호표 발급 허용 상태 검증
+    public void verifyStoreTicketStatus() {
+        if(getStoreTicketStatus() == StoreTicketStatus.CLOSE)
+            throw new StoreTicketIsCloseException("번호표 발급이 허용되지 않았습니다");
+    }
+
     //가게 수정
     public void changeStore(String phoneNum, String address) {
         this.phoneNum = phoneNum;
@@ -75,7 +108,13 @@ public class Store {
 
     //번호표 발급 활성화 비활성화 변경
     public void changeStoreTicketStatus(StoreTicketStatus storeTicketStatus) {
+        verifyStoreStatus();  //승인되지 않은 매장 체크
         this.storeTicketStatus = storeTicketStatus;
+    }
+
+    //회원가입용 번호표 발급 비활성화
+    public void changeStoreTicketStatusClose() {
+        this.storeTicketStatus = StoreTicketStatus.CLOSE;
     }
 
     //가게 승인 여부 변경
