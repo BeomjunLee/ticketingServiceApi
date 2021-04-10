@@ -1,13 +1,13 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
+import com.hoseo.hackathon.storeticketingservice.domain.status.MemberRole;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -36,8 +36,10 @@ public class Member {
     
     @Enumerated(EnumType.STRING)
     private MemberStatus status;                            //가입 대기(VALID, INVALID) 탈퇴 (DELETE)
-    @Enumerated(value = EnumType.STRING)
-    private Role role;                                      //권한
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<MemberRole> roles;                                      //권한
 
     private LocalDateTime createdDate;                      //가입일
     private LocalDateTime deletedDate;                      //탈퇴일
@@ -61,7 +63,7 @@ public class Member {
     }
 
     //refreshToken 갱신
-    public void changeRefreshToken(String refreshToken) {
+    public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
@@ -87,9 +89,14 @@ public class Member {
     }
 
     //==비지니스 로직
-    public void changeRole(Role role) { //권한 변경
-        this.role = role;
+    public void removeRole(MemberRole role) { //권한 삭제
+        this.roles.remove(role);
     }
+
+    public void addRole(MemberRole... role) { //권한 추가
+        this.roles = Set.of(role);
+    }
+
     public void changeMemberStatus(MemberStatus status) {   //가입상태 변경
         this.status = status;
     }

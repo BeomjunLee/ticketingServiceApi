@@ -1,8 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hoseo.hackathon.storeticketingservice.domain.Member;
-import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
+import com.hoseo.hackathon.storeticketingservice.domain.status.MemberRole;
 import lombok.*;
 
 @Data
@@ -19,6 +18,6 @@ public class MemberDto {
     private int point;
 
     @JsonIgnore
-    private Role role;
+    private MemberRole role;
 
 }

@@ -1,7 +1,6 @@
 package com.hoseo.hackathon.storeticketingservice.domain.dto.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
 import lombok.*;
 
 import java.time.LocalDateTime;

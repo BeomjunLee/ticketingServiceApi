@@ -15,8 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUsername(String username);
 
-    //모든 회원들 조회
-    Page<Member> findAllByStatus(Pageable pageable, MemberStatus status);
+    Optional<Member> findMemberByUsernameAndRefreshToken(String username, String refreshToken);
 
     //전체 회원수
     int countByStatus(MemberStatus status);
@@ -33,4 +32,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //refreshToken 검색 최적화
     @Query("select m.refreshToken from Member m where m.username = :username")
     Optional<String> findRefreshToken(@Param("username") String username);
+
+    @Query("select m from Member m join fetch m.roles where m.username = :username")
+    Optional<Member> findMemberByUsernameFetch(@Param("username") String username);
 }

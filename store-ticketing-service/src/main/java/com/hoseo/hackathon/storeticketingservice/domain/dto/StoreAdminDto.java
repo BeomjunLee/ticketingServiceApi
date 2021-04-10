@@ -1,12 +1,9 @@
 package com.hoseo.hackathon.storeticketingservice.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
-import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
+import com.hoseo.hackathon.storeticketingservice.domain.status.MemberRole;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -20,7 +17,7 @@ public class StoreAdminDto {
     private String member_email;
 
     @JsonIgnore
-    private Role role;
+    private MemberRole role;
     @JsonIgnore
     private Long store_id;
 

@@ -361,9 +361,9 @@ public class AdminService {
     @Transactional
     public void deleteMember(Long member_id) {
         Member member = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 회원을 찾을수 없습니다"));
-        if (member.getRole() ==Role.USER) {
+        if (member.getRoles().contains(MemberRole.USER)) {
             member.changeMemberStatus(MemberStatus.DELETE);
-        } else if (member.getRole() == Role.STORE_ADMIN) {
+        } else if (member.getRoles().contains(MemberRole.STORE_ADMIN)) {
             Store store = storeRepository.findByMember_Id(member_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
             member.changeMemberStatus(MemberStatus.DELETE);
             store.changeStoreStatus(StoreStatus.DELETE);
