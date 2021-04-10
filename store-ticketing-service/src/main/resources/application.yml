@@ -6,6 +6,7 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
+#ORACLE
 #spring:
 #  datasource:
 #    driver-class-name: oracle.jdbc.driver.OracleDriver
@@ -13,7 +14,7 @@ spring:
 #    username: hoseo
 #    password: 1234
 
-  #JPA
+#JPA
   jpa:
     hibernate:
       ddl-auto: create #테이블 자동 생성
@@ -38,3 +39,10 @@ spring:
 #    org.springframework.security: debug
     #root : debug
 
+jwt:
+  header: Authorization
+  secretKey : leebeomjunleebeomjunleebeomjunleebeomjunleebeomjunleebeomjun
+  #1h
+  accessToken-valid-seconds : 600
+  #24h
+  refreshToken-valid-seconds : 86400
