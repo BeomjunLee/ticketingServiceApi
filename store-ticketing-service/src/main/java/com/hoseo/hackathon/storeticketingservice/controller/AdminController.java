@@ -62,8 +62,7 @@ public class AdminController {
                 .totalEnrollStoreCount(totalEnrollStoreCount)
                 .build();
         //hateoas
-        AdminStoreManageResource resource = new AdminStoreManageResource(dto);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminStoreManageResource(dto));
     }
 
     /**
@@ -92,8 +91,7 @@ public class AdminController {
                 //TODO 보류회원 결정나면 작업
                 .build();
         //hateoas
-        AdminWaitingMembersAndStoreManageResource resource = new AdminWaitingMembersAndStoreManageResource(dto);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminWaitingMembersAndStoreManageResource(dto));
     }
 
     /**
@@ -124,12 +122,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/tickets/{ticket_id}/hold-ticket")
     public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdTicket(store_id, ticket_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 보류 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -143,12 +141,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/tickets/{ticket_id}/cancel-ticket")
     public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.cancelTicketByAdmin(store_id, ticket_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -162,12 +160,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/tickets/{ticket_id}/check-ticket")
     public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.checkTicket(store_id, ticket_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 체크 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -181,12 +179,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/tickets/{ticket_id}/cancel-holdingTicket")
     public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdCancelTicket(store_id, ticket_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -200,12 +198,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/tickets/{ticket_id}/check-holdingTicket")
     public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
         adminService.holdCheckTicket(store_id, ticket_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("보류 번호표 체크 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -236,12 +234,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/close-status")
     public ResponseEntity closeTicket(@PathVariable("store_id")Long store_id) {
         adminService.closeTicket(store_id);
-        Response response = Response.builder()
+
+        return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 번호표 비활성화 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -256,12 +254,11 @@ public class AdminController {
     public ResponseEntity updateInfo(@PathVariable("store_id")Long store_id, @RequestBody @Valid StoreInfoForm form) {
         adminService.updateStoreInfo(store_id, form);
 
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 상태 정보 변경 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -277,12 +274,12 @@ public class AdminController {
     public ResponseEntity updateStoreAdmin(@PathVariable("store_id")Long store_id, @PathVariable("member_id")Long member_id,
                                            @RequestBody @Valid AdminUpdateStoreAdminForm form) {
         adminService.updateStoreAdmin(store_id, member_id, form);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 관리자 수정 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -331,8 +328,7 @@ public class AdminController {
                 .currentUsingServiceCount(adminService.currentUsingServiceCount())
                 .memberList(assembler.toModel(adminService.findMembers(pageable, MemberStatus.VALID, condition), e -> new AdminMemberListResource(e)))
                 .build();
-        AdminMemberManageResource resource = new AdminMemberManageResource(dto);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminMemberManageResource(dto));
     }
 
     /**
@@ -345,12 +341,12 @@ public class AdminController {
     @DeleteMapping("/members/{member_id}")
     public ResponseEntity deleteMember(@PathVariable("member_id")Long member_id) {
         adminService.deleteMember(member_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("회원 탈퇴 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -363,6 +359,7 @@ public class AdminController {
     @GetMapping("/members/{member_id}")
     public ResponseEntity updateMember(@PathVariable("member_id")Long member_id) {
         Member member = adminService.findMember(member_id);
+
         AdminMemberDto dto = AdminMemberDto.builder()
                 .member_id(member.getId())
                 .username(member.getUsername())
@@ -372,7 +369,6 @@ public class AdminController {
                 .point(member.getPoint())
                 .createdDate(member.getCreatedDate())
                 .build();
-
         return ResponseEntity.ok(dto);
     }
 
@@ -389,12 +385,11 @@ public class AdminController {
     public ResponseEntity updateMember(@PathVariable("member_id")Long member_id, @RequestBody @Valid AdminUpdateMemberForm form) {
         adminService.updateMember(member_id, form);
 
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("회원 수정 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
 
@@ -411,12 +406,12 @@ public class AdminController {
     @DeleteMapping("/members/delete-members")
     public ResponseEntity deleteMembersWeekPast() {
         adminService.deleteMemberWeekPast();
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("탈퇴회원 삭제 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -431,12 +426,11 @@ public class AdminController {
         //회원 번호표 취소
         adminService.cancelTicket(ticket_id);
 
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("번호표 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
 //===========================================가입 승인===================================================
@@ -459,8 +453,7 @@ public class AdminController {
                 .totalEnrollStoreCount(totalEnrollStoreCount)
                 .build();
         //hateoas
-        AdminStoreWaitManageResource resource = new AdminStoreWaitManageResource(dto);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminStoreWaitManageResource(dto));
     }
 
     /**
@@ -475,12 +468,11 @@ public class AdminController {
     public ResponseEntity permitStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
         adminService.permitStoreAdmin(member_id, store_id);
 
-        Response response = Response.builder()
-                .result("success")
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 가입 승인 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -494,12 +486,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/members/{member_id}/cancel-join")
     public ResponseEntity rejectStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
         adminService.cancelPermitStoreAdmin(member_id, store_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("매장 승인 취소 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
 //=============================================시스템 에러=============================================
@@ -514,12 +506,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/apply-errors")
     public ResponseEntity sendErrorSystem(@PathVariable("store_id")Long store_id) {
         adminService.sendErrorSystem(store_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("오류접수 성공")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -532,12 +524,12 @@ public class AdminController {
     @PostMapping("/stores/{store_id}/complete-errors")
     public ResponseEntity errorSystemComplete(@PathVariable("store_id") Long store_id) {
         adminService.completeErrorSystem(store_id);
-        Response response = Response.builder()
-                .result("success")
+
+        return ResponseEntity.ok(Response.builder()
+                .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("오류 해결 완료")
-                .build();
-        return ResponseEntity.ok(response);
+                .build());
     }
 
     /**
@@ -551,8 +543,7 @@ public class AdminController {
     public ResponseEntity errorSystemList(PagedResourcesAssembler<StoreErrorListDto> assembler, Pageable pageable) {
         PagedModel<AdminStoreErrorResource> adminStoreErrorManageResource = assembler.toModel(adminService.findErrorStores(pageable),
                 e -> new AdminStoreErrorResource(e));
-        AdminStoreErrorManageResource resource = new AdminStoreErrorManageResource(adminStoreErrorManageResource);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminStoreErrorManageResource(adminStoreErrorManageResource));
     }
 
     /**
@@ -566,8 +557,7 @@ public class AdminController {
     public ResponseEntity errorSystemListByWaiting(PagedResourcesAssembler<StoreErrorListDto> assembler, Pageable pageable) {
         PagedModel<AdminStoreErrorResource> adminStoreErrorManageResource = assembler.toModel(adminService.findErrorStoresByTotalWaitingCount(pageable),
                 e -> new AdminStoreErrorResource(e));
-        AdminStoreErrorManageByWaitingCountResource resource = new AdminStoreErrorManageByWaitingCountResource(adminStoreErrorManageResource);
-        return ResponseEntity.ok(resource);
+        return ResponseEntity.ok(new AdminStoreErrorManageByWaitingCountResource(adminStoreErrorManageResource));
     }
 
 
