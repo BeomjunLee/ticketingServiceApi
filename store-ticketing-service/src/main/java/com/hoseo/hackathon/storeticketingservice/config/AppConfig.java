@@ -1,18 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.config;
 
-import com.hoseo.hackathon.storeticketingservice.domain.Member;
-import com.hoseo.hackathon.storeticketingservice.domain.Store;
-import com.hoseo.hackathon.storeticketingservice.domain.status.Role;
-import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus;
-import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
-import com.hoseo.hackathon.storeticketingservice.service.MemberService;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
