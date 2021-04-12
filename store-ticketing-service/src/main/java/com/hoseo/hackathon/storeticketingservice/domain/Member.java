@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -39,7 +40,7 @@ public class Member {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<MemberRole> roles;                                      //권한
+    private Set<MemberRole> roles = new HashSet<>();        //권한
 
     private LocalDateTime createdDate;                      //가입일
     private LocalDateTime deletedDate;                      //탈퇴일
