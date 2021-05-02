@@ -1,10 +1,9 @@
 ## 대기 번호표 관리 서비스
-<img src="https://user-images.githubusercontent.com/69130921/116804174-a98c9800-ab57-11eb-8b98-b61ce4366f1a.png">
+<img src="https://user-images.githubusercontent.com/69130921/116804258-5e26b980-ab58-11eb-8b20-af9ca681f76b.png"><br>
 
 ### 기능
 
-<img src="https://user-images.githubusercontent.com/69130921/116804190-cde87480-ab57-11eb-8a01-95223e99da8c.png"><br>
-
+<img src="https://user-images.githubusercontent.com/69130921/116804270-77c80100-ab58-11eb-891d-358377648a45.png"><br>
 - 회원은 가고싶은 매장의 대기 인원수와 대기 시간을 실시간으로 지도에서 확인할 수 있고,<br>
 매장의 대기가 꽉 찼을 때 기다리지 않고 온라인에서 번호표를 뽑아 실시간으로 변동되는 번호표의 정보를 확인 및 취소할 수 있으며, 대기 순번이 가까워지면 문자를 받아볼수 있다.<br><br>
 
