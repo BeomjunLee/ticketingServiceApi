@@ -18,7 +18,7 @@
 <img src="https://user-images.githubusercontent.com/69130921/116891107-4b4fda00-ac69-11eb-9b2b-68bbd9729123.png"><br>
 
 ## API 문서
-<img src="https://i.ibb.co/ZzNFmg0/2021-05-03-11-56-28.png"><br>
+<img src="https://i.ibb.co/8gXfcxH/2021-05-03-11-56-28.png"><br>
 <img src="https://i.ibb.co/6JpdzZX/2021-05-03-11-55-51.png"><br>
 <img src="https://i.ibb.co/HzMr0JQ/2021-05-03-11-55-58.png"><br>
 <img src="https://i.ibb.co/6chC5dW/2021-05-03-11-56-09.png"><br>
