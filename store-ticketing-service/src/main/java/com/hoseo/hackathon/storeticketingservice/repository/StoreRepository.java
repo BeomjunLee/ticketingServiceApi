@@ -21,7 +21,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Optional<Store> findByMember_Id(Long member_id);
 
     //관리자의 식당 찾기
-    @Query("select s from Store s join s.member m where m.username = :username")
+    @Query("select s from Store s join fetch s.member m join fetch m.roles where m.username = :username")
     Optional<Store> findStoreJoinMemberByUsername(@Param("username") String username);
 
     //가게 목록 보기

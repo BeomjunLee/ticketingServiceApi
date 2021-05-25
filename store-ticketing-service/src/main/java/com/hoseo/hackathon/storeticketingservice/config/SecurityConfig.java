@@ -73,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     "/api/members/login",
                 "/api/members/refreshToken",
                 "/api/members/new",
-                "/api/members/storeAdmin/new");
+                "/api/members/storeAdmin/new",
+                "/swagger-ui**");
     }
 }

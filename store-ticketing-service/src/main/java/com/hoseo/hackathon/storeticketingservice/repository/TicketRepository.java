@@ -29,11 +29,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     int countByMemberUsernameAndStatus(String username, TicketStatus status);
 
     //[회원] 티켓 찾기
-    @Query("select t from Ticket t join t.member m where m.username = :username and t.status = :status")
+    @Query("select t from Ticket t join fetch t.member m where m.username = :username and t.status = :status")
     Optional<Ticket> findTicketJoinMemberByUsernameAndStatus(@Param("username") String username, @Param("status") TicketStatus status);
 
     //회원_id로 조인해서 티켓 id찾기
-    @Query("select t.id from Ticket t join t.member m where m.id = :member_id")
+    @Query("select t.id from Ticket t join fetch t.member m where m.id = :member_id")
     Optional<Long> findTicketIdJoinMemberId(@Param("member_id") Long member_id);
 
     //현재 서비스 이용자수(번호표를 가지고 있는 인원)

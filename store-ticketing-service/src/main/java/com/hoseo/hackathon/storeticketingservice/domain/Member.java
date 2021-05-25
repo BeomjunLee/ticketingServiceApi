@@ -38,7 +38,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;                            //가입 대기(VALID, INVALID) 탈퇴 (DELETE)
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private Set<MemberRole> roles = new HashSet<>();        //권한
 

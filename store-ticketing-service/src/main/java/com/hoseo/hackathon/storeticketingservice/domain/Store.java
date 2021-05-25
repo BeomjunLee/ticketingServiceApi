@@ -34,7 +34,7 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private StoreTicketStatus storeTicketStatus;   //가게 번호표 발급 활성화 (OPEN, CLOSE) 상태
     @Enumerated(EnumType.STRING)
-    private StoreStatus storeStatus;    //가게 승인 여부 (VALID, INVALID)
+    private StoreStatus storeStatus;        //가게 승인 여부 (VALID, INVALID)
     @Enumerated(EnumType.STRING)
     private ErrorStatus errorStatus;         //시스템 장애 여부 (ERROR, GOOD)
 

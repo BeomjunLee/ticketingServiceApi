@@ -180,10 +180,6 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 회원 탈퇴
-     */
-
-    /**
      * [사이트 관리자] 회원가입
      */
     @Transactional //조회가 아니므로 Transactional
@@ -212,7 +208,7 @@ public class MemberService implements UserDetailsService {
     public void validateDuplicateStore(String name) {
         int findStores = storeRepository.countByName(name);
         if (findStores > 0) {
-            throw new DuplicateStoreNameException("가게명이 중복되었습니다");
+            throw new DuplicateStoreNameException("매장명이 중복되었습니다");
         }
         //두 유저가 동시에 가입할 경우를 대비해서 DB 에도 유니크 제약조건을 걸어줘야함
     }
@@ -224,7 +220,4 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
     }
 
-    /**
-     * 포인트 기부하기
-     */
 }
