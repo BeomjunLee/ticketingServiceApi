@@ -19,10 +19,10 @@
 <img src="https://i.ibb.co/svFzH2Z/2021-05-03-11-42-27.png"><br><br>
 
 ## API 문서
-<img src="https://i.ibb.co/3f1WHnP/2021-05-27-5-50-13.png"><br>
-<img src="https://i.ibb.co/NxXnb9r/2021-05-27-5-50-30.png"><br>
-<img src="https://i.ibb.co/s5dLbbH/2021-05-27-5-49-46.png"><br>
-<img src="https://i.ibb.co/Ky1ZW4R/2021-05-27-5-49-57.png"><br>
+<img src="https://i.ibb.co/3f1WHnP/2021-05-27-5-50-13.png" width="800"><br>
+<img src="https://i.ibb.co/NxXnb9r/2021-05-27-5-50-30.png" width="800"><br>
+<img src="https://i.ibb.co/s5dLbbH/2021-05-27-5-49-46.png" width="800"><br>
+<img src="https://i.ibb.co/Ky1ZW4R/2021-05-27-5-49-57.png" width="800"><br>
 
 
 
