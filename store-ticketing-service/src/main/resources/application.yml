@@ -22,7 +22,6 @@ spring:
       hibernate:
         show_sql: true   #운영할 때는 system.out로 sql를 보여주기때문에 쓰지 말아야한다
         format_sql: true  #sql 이쁘게 보이게
-        default_batch_fetch_size: 100
 #database:
         ##      platform: org.hibernate.dialect.Oracle11gDialect
 

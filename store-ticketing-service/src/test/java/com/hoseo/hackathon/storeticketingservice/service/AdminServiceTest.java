@@ -45,12 +45,12 @@ class AdminServiceTest {
     @Test
     @DisplayName("매장 관리자 가입 취소")
     void cancelPermitStoreAdmin() {
-        adminService.cancelPermitStoreAdmin(3L, 4L);
+        adminService.cancelPermitStoreAdmin(3L);
 
         Member member = adminService.findStoreAdmin(3L);
         Store store = adminService.findStore(4L);
 
-        Assertions.assertThat(member.getStatus()).isEqualTo(MemberStatus.INVALID);
+        Assertions.assertThat(member.getMemberStatus()).isEqualTo(MemberStatus.INVALID);
         Assertions.assertThat(store.getStoreStatus()).isEqualTo(StoreStatus.INVALID);
     }
 

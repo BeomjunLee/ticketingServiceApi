@@ -1,6 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,9 +27,10 @@ public class StoreListDto {
     private String address;
     private LocalDateTime createdDate;
     private String companyNumber;
+    private StoreStatus storeStatus;
 
     @QueryProjection
-    public StoreListDto(Long store_id, Long member_id, String name, String phoneNum, String address, LocalDateTime createdDate, String companyNumber) {
+    public StoreListDto(Long store_id, Long member_id, String name, String phoneNum, String address, LocalDateTime createdDate, String companyNumber, StoreStatus storeStatus) {
         this.store_id = store_id;
         this.member_id = member_id;
         this.name = name;
@@ -36,5 +38,6 @@ public class StoreListDto {
         this.address = address;
         this.createdDate = createdDate;
         this.companyNumber = companyNumber;
+        this.storeStatus = storeStatus;
     }
 }

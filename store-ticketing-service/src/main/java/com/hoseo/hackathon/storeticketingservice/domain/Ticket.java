@@ -1,7 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 
+import com.hoseo.hackathon.storeticketingservice.domain.form.TicketForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import com.hoseo.hackathon.storeticketingservice.exception.IsAlreadyCompleteException;
 import lombok.*;
 
@@ -11,9 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ticket {
+public class Ticket extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -32,9 +31,8 @@ public class Ticket {
     @JoinColumn(name = "store_id")
     private Store store;                //store_id
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @Unique
     private Member member;
 
     @Builder
@@ -45,7 +43,11 @@ public class Ticket {
     /**
      * 번호표 발급
      */
-    public static void createTicket(Ticket ticket, Store store, Member member) {
+    public static Ticket createTicket(TicketForm ticketForm, Store store, Member member) {
+        Ticket ticket = Ticket.builder()
+                .peopleCount(ticketForm.getPeopleCount())
+                .build();
+
         store.verifyStoreStatus();  //승인되지 않은 매장 체크
         store.verifyStoreTicketStatus();//번호표 발급 활성화 상태 체크
         member.verifyTicket();//번호표 중복 뽑기 체크
@@ -58,16 +60,19 @@ public class Ticket {
                 store.getAvgWaitingTimeByOne() * (totalWaitingCount + 1),       //대기시간
                 LocalDateTime.now(),                                                      //발급시간
                 TicketStatus.VALID);                                                     //번호표 상태
+
+
         ticket.setStore(store);
         ticket.setMember(member);   //연관관계 세팅
 
         store.changeStoreByTicketing(store.getTotalWaitingCount());   //Store 갱신
+        return ticket;
     }
 
     /**
      * 번호표 취소
      */
-    public void cancelTicket(Store store) {
+    public void cancelTicket() {
         if (getStatus() == TicketStatus.CANCEL)
             throw new IsAlreadyCompleteException("이미 취소처리 되었습니다");
 
@@ -78,7 +83,7 @@ public class Ticket {
     /**
      * 번호표 체크
      */
-    public void checkTicket(Store store) {
+    public void checkTicket() {
         if (getStatus() == TicketStatus.INVALID)
             throw new IsAlreadyCompleteException("이미 체크처리 되었습니다");
 
@@ -89,7 +94,7 @@ public class Ticket {
     /**
      * 번호표 보류
      */
-    public void holdTicket(Store store) {
+    public void holdTicket() {
         if (getStatus() == TicketStatus.HOLD)
             throw new IsAlreadyCompleteException("이미 보류처리 되었습니다");
         changeStatusTicket(TicketStatus.HOLD); //번호표 상태 변경
@@ -109,12 +114,13 @@ public class Ticket {
     //==연관관계 편의메서드
     public void setMember(Member member) {
         this.member = member;
-        member.changeTicket(this);
+        member.getTicketList().add(this);
 
     }
     //==연관관계 편의메서드
     public void setStore(Store store) {
         this.store = store;
+        store.getTicketList().add(this);
     }
 
     //==비지니스 로직==

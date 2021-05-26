@@ -2,7 +2,7 @@
 POST http://localhost:8080/api/members/login
 Content-Type: application/json
 
-{"username":"member1","password":"1234"}
+{"username":"test","password":"1234"}
 
 ### accessToken 재발급
 POST http://localhost:8080/api/members/refreshToken
