@@ -8,6 +8,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,10 +19,8 @@ import java.util.Set;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "member_id")
     @ApiModelProperty(hidden = true)
@@ -29,15 +28,10 @@ public class Member {
     
     @Column(unique = true)
     private String username;                                //아이디
-
     private String password;                                //비밀번호
-
     private String name;                                    //이름
-
     private String phoneNum;                                //전화번호
-
     private String email;                                   //이메일
-
     private int point;                                      //포인트
     
     @Enumerated(EnumType.STRING)
@@ -47,22 +41,26 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Set<MemberRole> roles = new HashSet<>();        //권한
 
-    private LocalDateTime createdDate;                      //가입일
     private LocalDateTime deletedDate;                      //탈퇴일
 
     private String refreshToken;                            //refreshToken
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member", cascade = CascadeType.ALL)  //양방향 매핑
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")  //양방향 매핑
     private List<Ticket> ticketList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
 
-    //==연관관계 세팅==
-    public void setStore(Store store) {
-        this.store = store;
-        store.getMemberList().add(this);
+    @Builder
+    public Member(String username, String password, String name, String phoneNum, String email, MemberStatus memberStatus) {
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.phoneNum = phoneNum;
+        this.email = email;
+        this.memberStatus = memberStatus;
+        super.changeCreatedDate(LocalDateTime.now());
     }
 
     /**
@@ -78,8 +76,6 @@ public class Member {
                 .name(memberForm.getName())
                 .phoneNum(memberForm.getPhoneNum())
                 .email(memberForm.getEmail())
-                .createdDate(LocalDateTime.now())
-                .deletedDate(null)  //탈퇴일은 가입시 null(재가입시 null 로 바꿔야돼서)
                 .memberStatus(MemberStatus.VALID)
                 .build();
         member.addRole(MemberRole.USER);   //권한부여
@@ -100,7 +96,6 @@ public class Member {
                 .name(storeAdminForm.getMemberName())
                 .phoneNum(storeAdminForm.getMemberPhoneNum())
                 .email(storeAdminForm.getMemberEmail())
-                .createdDate(LocalDateTime.now())
                 .memberStatus(MemberStatus.INVALID)
                 .build();
         member.addRole(MemberRole.STORE_ADMIN); //권한부여
@@ -109,9 +104,14 @@ public class Member {
         return member;
     }
 
-    /**
-     * 번호표 검증
-     */
+
+    //==연관관계 세팅==
+    public void setStore(Store store) {
+        this.store = store;
+        store.getMemberList().add(this);
+    }
+
+    //번호표 검증
     public void verifyTicket() {
         if(getTicketList().size() > 0)
             throw new DuplicateTicketingException("이미 번호표를 가지고 있습니다");

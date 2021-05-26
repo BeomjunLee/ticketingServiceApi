@@ -14,10 +14,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "store_id")
     private Long id;
@@ -40,7 +38,6 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private ErrorStatus errorStatus;         //시스템 장애 여부 (ERROR, GOOD)
 
-    private LocalDateTime createdDate;        //생성일
 
     @OneToMany(mappedBy = "store")
     private List<Member> memberList = new ArrayList<>();
@@ -48,11 +45,23 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<Ticket> ticketList = new ArrayList<>();
 
-
+    @Builder
+    public Store(String name, String phoneNum, String address, String latitude, String longitude, int avgWaitingTimeByOne,
+                 String companyNumber, StoreTicketStatus storeTicketStatus, StoreStatus storeStatus, ErrorStatus errorStatus) {
+        this.name = name;
+        this.phoneNum = phoneNum;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.avgWaitingTimeByOne = avgWaitingTimeByOne;
+        this.companyNumber = companyNumber;
+        this.storeTicketStatus = storeTicketStatus;
+        this.storeStatus = storeStatus;
+        this.errorStatus = errorStatus;
+    }
 
 
     //=========================비지니스로직=====================
-
     /**
      * 매장 가입
      * @param storeAdminForm 매장 폼
@@ -70,7 +79,6 @@ public class Store {
                 .storeTicketStatus(StoreTicketStatus.CLOSE)
                 .storeStatus(StoreStatus.INVALID)
                 .build();
-        store.memberList = new ArrayList<>();
         return store;
     }
 
@@ -79,7 +87,7 @@ public class Store {
      */
     public void permitStoreAdmin() {
         changeStoreStatus(StoreStatus.VALID);
-        changeCreatedDate(LocalDateTime.now());
+        super.changeCreatedDate(LocalDateTime.now());
     }
 
     /**
@@ -148,10 +156,10 @@ public class Store {
         this.errorStatus = errorStatus;
     }
     
-    //승인 날짜 설정
-    public void changeCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
+//    //승인 날짜 설정
+//    public void changeCreatedDate(LocalDateTime createdDate) {
+//        super. = createdDate;
+//    }
 
     //공지사항 변경
     public void changeNotice(String notice) {
