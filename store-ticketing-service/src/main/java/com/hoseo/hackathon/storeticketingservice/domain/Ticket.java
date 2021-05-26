@@ -22,7 +22,6 @@ public class Ticket extends BaseEntity{
     private int peopleCount;             //인원수
     private int waitingNum;             //대기번호
     private int waitingTime;            //대기시간
-    private LocalDateTime createdDate;   //발급시간
 
     @Enumerated(EnumType.STRING)
     private TicketStatus status;        //티켓 유효 상태(valid, invalid, cancel)
@@ -58,7 +57,6 @@ public class Ticket extends BaseEntity{
         ticket.changeTicket(ticket.getPeopleCount(),                                       //인원수(Controller)
                 totalWaitingCount + 1,                                          //대기번호
                 store.getAvgWaitingTimeByOne() * (totalWaitingCount + 1),       //대기시간
-                LocalDateTime.now(),                                                      //발급시간
                 TicketStatus.VALID);                                                     //번호표 상태
 
 
@@ -102,11 +100,11 @@ public class Ticket extends BaseEntity{
     }
 
     //항목 추가 메서드
-    public void changeTicket(int peopleCount, int waitingNum, int waitingTime, LocalDateTime createdDate, TicketStatus status) {
+    public void changeTicket(int peopleCount, int waitingNum, int waitingTime, TicketStatus status) {
         this.peopleCount = peopleCount;
         this.waitingNum = waitingNum;
         this.waitingTime = waitingTime;
-        this.createdDate = createdDate;
+        super.changeCreatedDate(LocalDateTime.now());
         this.status = status;
     }
     
