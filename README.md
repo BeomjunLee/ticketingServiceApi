@@ -1,3 +1,4 @@
+
 ## 대기 번호표 관리 서비스
 <img src="https://user-images.githubusercontent.com/69130921/116804258-5e26b980-ab58-11eb-8b20-af9ca681f76b.png"><br>
 
@@ -18,11 +19,11 @@
 <img src="https://i.ibb.co/svFzH2Z/2021-05-03-11-42-27.png"><br><br>
 
 ## API 문서
-<img src="https://i.ibb.co/8gXfcxH/2021-05-03-11-56-28.png"><br>
-<img src="https://i.ibb.co/qF4ZKnJ/2021-05-03-11-55-51.png"><br>
-<img src="https://i.ibb.co/2tLjwbB/2021-05-03-11-55-58.png"><br>
-<img src="https://i.ibb.co/LDw7fGZ/2021-05-03-11-56-09.png"><br>
-<img src="https://i.ibb.co/Swd1hFR/2021-05-03-11-56-18.png"><br>
+<img src="https://i.ibb.co/3f1WHnP/2021-05-27-5-50-13.png"><br>
+<img src="https://i.ibb.co/NxXnb9r/2021-05-27-5-50-30.png"><br>
+<img src="https://i.ibb.co/s5dLbbH/2021-05-27-5-49-46.png"><br>
+<img src="https://i.ibb.co/Ky1ZW4R/2021-05-27-5-49-57.png"><br>
+
 
 
  
