@@ -23,8 +23,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("select t from Ticket t join fetch t.member m where m.username = :username and t.status = :status")
     Optional<Ticket> findTicketJoinMemberByUsernameAndStatus(@Param("username") String username, @Param("status") TicketStatus status);
 
-    //[매장 관리자] 번호표 찾기 + 매장 조인 (매장 관리자 번호표 취소, 체크, 보류용)
-
     //[회원] 번호표 찾기 + 매장 + 회원 조인 (회원 번호표 취소용)
     @Query("select t from Ticket t join fetch t.member m join fetch t.store where m.username = :username and t.status = :status")
     Optional<Ticket> findTicketJoinMemberJoinStoreByUsernameAndStatus(@Param("username") String username, @Param("status") TicketStatus status);
