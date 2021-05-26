@@ -1,6 +1,6 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.ErrorStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.NotAuthorizedStoreException;
@@ -8,14 +8,14 @@ import com.hoseo.hackathon.storeticketingservice.exception.StoreTicketIsCloseExc
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Getter
-@AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "store_id")
     private Long id;
@@ -38,33 +38,61 @@ public class Store {
     @Enumerated(EnumType.STRING)
     private ErrorStatus errorStatus;         //시스템 장애 여부 (ERROR, GOOD)
 
-    private LocalDateTime createdDate;        //생성일
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;              //member_id
+    @OneToMany(mappedBy = "store")
+    private List<Member> memberList = new ArrayList<>();
 
-    //==연관관계 메서드==
-    public void setMember(Member member) {
-        this.member = member;
+    @OneToMany(mappedBy = "store")
+    private List<Ticket> ticketList = new ArrayList<>();
+
+    @Builder
+    public Store(String name, String phoneNum, String address, String latitude, String longitude, int avgWaitingTimeByOne,
+                 String companyNumber, StoreTicketStatus storeTicketStatus, StoreStatus storeStatus, ErrorStatus errorStatus) {
+        this.name = name;
+        this.phoneNum = phoneNum;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.avgWaitingTimeByOne = avgWaitingTimeByOne;
+        this.companyNumber = companyNumber;
+        this.storeTicketStatus = storeTicketStatus;
+        this.storeStatus = storeStatus;
+        this.errorStatus = errorStatus;
     }
 
     //=========================비지니스로직=====================
+    /**
+     * 매장 가입
+     * @param storeAdminForm 매장 폼
+     */
+    public static Store createStore(StoreAdminForm storeAdminForm) {
+        Store store = Store.builder()
+                .name(storeAdminForm.getStoreName())
+                .phoneNum(storeAdminForm.getStorePhoneNum())
+                .address(storeAdminForm.getStoreAddress())
+                .latitude(storeAdminForm.getStoreLatitude())
+                .longitude(storeAdminForm.getStoreLongitude())
+                .companyNumber(storeAdminForm.getStoreCompanyNumber())
+                .avgWaitingTimeByOne(5)
+                .errorStatus(ErrorStatus.GOOD)
+                .storeTicketStatus(StoreTicketStatus.CLOSE)
+                .storeStatus(StoreStatus.INVALID)
+                .build();
+        return store;
+    }
 
     /**
      * 매장 관리자 가입 승인
      */
     public void permitStoreAdmin() {
-        member.changeMemberStatus(MemberStatus.VALID);
         changeStoreStatus(StoreStatus.VALID);
-        changeCreatedDate(LocalDateTime.now());
+        super.changeCreatedDate(LocalDateTime.now());
     }
 
     /**
      * 매장 관리자 가입 승인 취소
      */
     public void cancelPermitStoreAdmin() {
-        member.changeMemberStatus(MemberStatus.INVALID);
         changeStoreStatus(StoreStatus.INVALID);
     }
 
@@ -127,10 +155,10 @@ public class Store {
         this.errorStatus = errorStatus;
     }
     
-    //승인 날짜 설정
-    public void changeCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
+//    //승인 날짜 설정
+//    public void changeCreatedDate(LocalDateTime createdDate) {
+//        super. = createdDate;
+//    }
 
     //공지사항 변경
     public void changeNotice(String notice) {
