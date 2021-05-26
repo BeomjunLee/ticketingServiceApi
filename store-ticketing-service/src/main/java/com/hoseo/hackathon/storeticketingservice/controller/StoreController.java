@@ -52,11 +52,8 @@ public class StoreController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{store_id}/tickets/new")
     public ResponseEntity createTicket(@PathVariable("store_id") Long store_id, @Valid @RequestBody TicketForm ticketForm, Principal principal) {
-        Ticket ticket = Ticket.builder()
-                .peopleCount(ticketForm.getPeopleCount())
-                .build();
 
-        storeService.createTicket(ticket, store_id, principal.getName());
+        storeService.createTicket(ticketForm, store_id, principal.getName());
 
         URI createdUri = linkTo(StoreController.class).slash(store_id).slash("tickets/new").toUri();
 
@@ -144,7 +141,7 @@ public class StoreController {
     @PreAuthorize("hasRole('ROLE_STORE_ADMIN')")
     @PostMapping("/tickets/{ticket_id}/cancel-ticket")
     public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, Principal principal) {
-        storeService.cancelTicketByAdmin(principal.getName(), ticket_id);
+        storeService.cancelTicket(principal.getName(), ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)

@@ -60,7 +60,6 @@ public class Store extends BaseEntity{
         this.errorStatus = errorStatus;
     }
 
-
     //=========================비지니스로직=====================
     /**
      * 매장 가입

@@ -146,7 +146,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_STORE_ADMIN')")
     @GetMapping("/me")
     public ResponseEntity myInfo(Principal principal) {
-        Member member = memberService.findByUsername(principal.getName());
+        Member member = memberService.findMemberByUsername(principal.getName());
         if (member.getRoles().contains(MemberRole.USER)){    //회원
             MemberDto dto = MemberDto.builder()
                     .username(member.getUsername())
@@ -197,7 +197,7 @@ public class MemberController {
     public ResponseEntity updateMyInfo(Principal principal,
                                        @RequestBody @Valid UpdateMemberForm memberForm,
                                        @RequestBody @Valid UpdateStoreAdminForm storeForm) {
-        Member member = memberService.findByUsername(principal.getName());
+        Member member = memberService.findMemberByUsername(principal.getName());
 
         if (member.getRoles().contains(MemberRole.USER)){    //회원
             memberService.updateMember(principal.getName(), memberForm);
@@ -278,7 +278,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/tickets/cancel-ticket")
     public ResponseEntity cancelMyTicket(Principal principal) {
-        storeService.cancelTicket(principal.getName());
+        storeService.cancelTicketByMember(principal.getName());
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)

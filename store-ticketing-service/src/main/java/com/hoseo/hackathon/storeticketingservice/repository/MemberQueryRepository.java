@@ -4,6 +4,7 @@ import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.MemberListDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.QMemberListDto;
 import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
+import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
 import com.hoseo.hackathon.storeticketingservice.repository.condition.MemberSearchCondition;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
@@ -34,13 +35,27 @@ public class MemberQueryRepository {
     /**
      * 매장, 회원 조인 -> member_id, store_id 같은 스토어 객체 한번에 조회
      * @param member_id
-     * @return
+     * @return Member Entity
      */
     public Optional<Member> findStoreJoinMember(Long member_id) {
         Member findMember = queryFactory
                 .selectFrom(member)
                 .join(member.store, store).fetchJoin()
                 .where(member.id.eq(member_id))
+                .fetchOne();
+        return Optional.ofNullable(findMember);
+    }
+
+    /**
+     * 회원 + 번호표 조인
+     * @param username 회원 아이디
+     * @return Member Entity
+     */
+    public Optional<Member> findMemberJoinTicketByUsername(String username) {
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .leftJoin(member.ticketList, ticket).fetchJoin()
+                .where(member.username.eq(username))
                 .fetchOne();
         return Optional.ofNullable(findMember);
     }

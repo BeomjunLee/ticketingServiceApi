@@ -6,10 +6,12 @@ import com.hoseo.hackathon.storeticketingservice.domain.form.*;
 import com.hoseo.hackathon.storeticketingservice.domain.response.LoginResponse;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
+import com.hoseo.hackathon.storeticketingservice.repository.MemberQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,12 +35,13 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true) //조회최적화
 @RequiredArgsConstructor    //스프링 주입
+@Slf4j
 public class MemberService implements UserDetailsService {
 
-    private final Logger log = LoggerFactory.getLogger(MemberService.class);
     private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberQueryRepository memberQueryRepository;
     private final JwtProvider jwtProvider;
 
 
@@ -136,7 +139,7 @@ public class MemberService implements UserDetailsService {
      */
     @Transactional
     public void updateStoreAdmin(String username, UpdateStoreAdminForm storeForm) {
-        Member member = memberRepository.findByUsernameJoinStore(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
+        Member member = memberRepository.findMemberJoinStoreByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
         member.changeMember(storeForm.getMember_name(), storeForm.getMember_phoneNum(), storeForm.getMember_email());
         member.getStore().changeStore(storeForm.getStore_phoneNum(), storeForm.getStore_address());
 
@@ -202,17 +205,21 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 회원 정보 보기
+     * 회원 정보 보기 (+번호표)
      */
-    public Member findByUsername(String username) {
+    public Member findByMemberJoinTicketByUsername(String username) {
+        return memberQueryRepository.findMemberJoinTicketByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
+    }
+
+    public Member findMemberByUsername(String username) {
         return memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
     }
 
     /**
      * 매장 회원 정보 보기
      */
-    public Member findByStoreUsername(String username) {
-        return memberRepository.findByUsernameJoinStore(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
+    public Member findMemberJoinStoreByUsername(String username) {
+        return memberRepository.findMemberJoinStoreByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
     }
 
 }

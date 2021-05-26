@@ -62,7 +62,8 @@ public class StoreQueryRepository {
                         store.phoneNum,
                         store.address,
                         store.createdDate,
-                        store.companyNumber
+                        store.companyNumber,
+                        store.storeStatus
                 ))
                 .from(store)
                 .join(store.memberList, member)

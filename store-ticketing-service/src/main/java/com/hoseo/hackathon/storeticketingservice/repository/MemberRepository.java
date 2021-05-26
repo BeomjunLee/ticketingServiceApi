@@ -15,11 +15,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUsername(String username);
 
-    @Query("select distinct m from Member m left join fetch m.ticketList where m.username = :username")
-    Optional<Member> findMemberJoinTicketByUsername(@Param("username") String username);
-
     @Query("select m from Member m join fetch m.store where m.username = :username")
-    Optional<Member> findByUsernameJoinStore(@Param("username") String username);
+    Optional<Member> findMemberJoinStoreByUsername(@Param("username") String username);
+
+    @Query("select m from Member m join fetch m.store where m.id = :memberId")
+    Optional<Member> findMemberJoinStoreByMemberId(@Param("memberId") Long memberId);
 
     @Query("select m from Member m join fetch m.store where m.id = :id")
     Optional<Member> findByMemberIdJoinStore(@Param("id") Long id);

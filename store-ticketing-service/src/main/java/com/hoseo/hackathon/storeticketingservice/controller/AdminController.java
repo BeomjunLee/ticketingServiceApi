@@ -5,12 +5,10 @@ import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.*;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminMemberDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminMemberManageDto;
-import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminStoreAdminDto;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.admin.AdminStoreManageDto;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.AdminUpdateStoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreInfoForm;
-import com.hoseo.hackathon.storeticketingservice.domain.resource.*;
 import com.hoseo.hackathon.storeticketingservice.domain.resource.admin.*;
 import com.hoseo.hackathon.storeticketingservice.domain.response.Response;
 import com.hoseo.hackathon.storeticketingservice.domain.response.ResultStatus;
@@ -29,7 +27,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
 @RestController
@@ -88,7 +85,6 @@ public class AdminController {
                 .notice(store.getNotice())
                 .avgWaitingTimeByOne(store.getAvgWaitingTimeByOne())
                 .store_id(store.getId())
-                //TODO 보류회원 결정나면 작업
                 .build();
         //hateoas
         return ResponseEntity.ok(new AdminWaitingMembersAndStoreManageResource(dto));
@@ -107,21 +103,20 @@ public class AdminController {
     public ResponseEntity manageHoldMembers(@PathVariable("store_id") Long store_id, Pageable pageable, PagedResourcesAssembler<HoldingMembersDto> assembler) {
         //보류회원정보
         PagedModel<EntityModel<HoldingMembersDto>> holdingMembers =
-                assembler.toModel(adminService.findHoldMembers(store_id, pageable), e -> new HoldingMembersResource(e));
+                assembler.toModel(adminService.findHoldMembers(store_id, pageable), e -> new AdminHoldingMembersResource(e));
         return ResponseEntity.ok(holdingMembers);
     }
 
     /**
      * 번호표 보류
      * @param ticket_id 번호표 고유 id 값
-     * @param store_id 매장 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "현재 대기중인 번호표 보류[사이트 관리자]", notes = "현재 대기 회원의 번호표를 보류합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/tickets/{ticket_id}/hold-ticket")
-    public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
-        adminService.holdTicket(store_id, ticket_id);
+    @PostMapping("/tickets/{ticket_id}/hold-ticket")
+    public ResponseEntity holdTicket(@PathVariable("ticket_id")Long ticket_id) {
+        adminService.holdTicket(ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -133,14 +128,13 @@ public class AdminController {
     /**
      * 번호표 취소
      * @param ticket_id 번호표 고유 id 값
-     * @param store_id 매장 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "현재 대기중인 번호표 취소[사이트 관리자]", notes = "현재 대기 회원의 번호표를 취소합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/tickets/{ticket_id}/cancel-ticket")
-    public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
-        adminService.cancelTicketByAdmin(store_id, ticket_id);
+    @PostMapping("/tickets/{ticket_id}/cancel-ticket")
+    public ResponseEntity cancelTicket(@PathVariable("ticket_id")Long ticket_id) {
+        adminService.cancelTicketByAdmin(ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -152,14 +146,13 @@ public class AdminController {
     /**
      * 번호표 체크
      * @param ticket_id 번호표 고유 id 값
-     * @param store_id 매장 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "현재 대기중인 번호표 체크하기[사이트 관리자]", notes = "현재 대기 회원의 번호표를 체크합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/tickets/{ticket_id}/check-ticket")
-    public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
-        adminService.checkTicket(store_id, ticket_id);
+    @PostMapping("/tickets/{ticket_id}/check-ticket")
+    public ResponseEntity checkTicket(@PathVariable("ticket_id")Long ticket_id) {
+        adminService.checkTicket(ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -171,14 +164,13 @@ public class AdminController {
     /**
      * 보류 중인 번호표 취소
      * @param ticket_id 번호표 고유 id 값
-     * @param store_id 매장 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "보류중인 번호표 취소[사이트 관리자]", notes = "현재 보류중인 회원의 번호표를 취소합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/tickets/{ticket_id}/cancel-holdingTicket")
-    public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
-        adminService.holdCancelTicket(store_id, ticket_id);
+    @PostMapping("/tickets/{ticket_id}/cancel-holdingTicket")
+    public ResponseEntity holdCancelTicket(@PathVariable("ticket_id")Long ticket_id) {
+        adminService.holdCancelTicket(ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -190,14 +182,13 @@ public class AdminController {
     /**
      * 보류중인 번호표 체크
      * @param ticket_id 번호표 고유 id 값
-     * @param store_id 매장 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "보류중인 번호표 체크[사이트 관리자]", notes = "현재 보류중인 회원의 번호표를 체크합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/tickets/{ticket_id}/check-holdingTicket")
-    public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id, @PathVariable("store_id")Long store_id) {
-        adminService.holdCheckTicket(store_id, ticket_id);
+    @PostMapping("/tickets/{ticket_id}/check-holdingTicket")
+    public ResponseEntity holdCheckTicket(@PathVariable("ticket_id")Long ticket_id) {
+        adminService.holdCheckTicket(ticket_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -263,17 +254,16 @@ public class AdminController {
 
     /**
      * 매장 관리자 정보 수정
-     * @param store_id 매장 고유 id 값
      * @param member_id 회원 고유 id 값
      * @param form (사이트 관리자 전용)매장 관리자 정보 form
      * @return http response
      */
     @ApiOperation(value = "매장 관리자 수정[사이트 관리자]", notes = "매장 관리자의 정보를 수정합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PatchMapping("/stores/{store_id}/members/{member_id}")
-    public ResponseEntity updateStoreAdmin(@PathVariable("store_id")Long store_id, @PathVariable("member_id")Long member_id,
+    @PatchMapping("/storeAdmins/{member_id}")
+    public ResponseEntity updateStoreAdmin(@PathVariable("member_id")Long member_id,
                                            @RequestBody @Valid AdminUpdateStoreAdminForm form) {
-        adminService.updateStoreAdmin(store_id, member_id, form);
+        adminService.updateStoreAdmin(member_id, form);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -284,30 +274,15 @@ public class AdminController {
 
     /**
      * 매장, 관리자 정보보기
-     * @param store_id 매장 고유 id 값
      * @param member_id 회원 고유 id 값
      * @return http response
      */
     @ApiOperation(value = "매장 관리자 정보보기[사이트 관리자]", notes = "매장, 관리자의 정보를 봅니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/stores/{store_id}/members/{member_id}")
-    public ResponseEntity findStoreAdmin(@PathVariable("store_id")Long store_id, @PathVariable("member_id")Long member_id) {
-        Member member = adminService.findStoreAdmin(member_id);
-        Store store = adminService.findStore(store_id);
+    @GetMapping("/storeAdmins/{member_id}")
+    public ResponseEntity findStoreAdmin(@PathVariable("member_id")Long member_id) {
 
-        AdminStoreAdminDto dto = AdminStoreAdminDto.builder()
-                .member_username(member.getUsername())
-                .member_name(member.getName())
-                .member_phoneNum(member.getPhoneNum())
-                .member_email(member.getEmail())
-                .member_createdDate(member.getCreatedDate())
-                .store_name(store.getName())
-                .store_phoneNum(store.getPhoneNum())
-                .store_address(store.getAddress())
-                .store_companyNumber(store.getCompanyNumber())
-                .store_createdDate(store.getCreatedDate())
-                .build();
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(adminService.findStoreAdmin(member_id));
     }
 //==================================================회원 관리==============================================
 
@@ -392,11 +367,6 @@ public class AdminController {
                 .build());
     }
 
-
-    /**
-     * 비밀번호 수정
-     */
-
     /**
      * 탈퇴 후 7일 지난 회원 영구 삭제
      * @return http response
@@ -411,25 +381,6 @@ public class AdminController {
                 .result(ResultStatus.SUCCESS)
                 .status(200)
                 .message("탈퇴회원 삭제 성공")
-                .build());
-    }
-
-    /**
-     * 번호표 취소 (ticket_id 이용)
-     * @param ticket_id 번호표 고유 id 값
-     * @return http response
-     */
-    @ApiOperation(value = "회원 번호표 취소[사이트 관리자]", notes = "사이트 관리자가 회원의 번호표를 취소합니다(번호표를 뽑지 않은 상태일시 링크x)")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/members/tickets/{ticket_id}/cancel-ticket")
-    public ResponseEntity manageMembers(@PathVariable("ticket_id")Long ticket_id) {
-        //회원 번호표 취소
-        adminService.cancelTicket(ticket_id);
-
-        return ResponseEntity.ok(Response.builder()
-                .result(ResultStatus.SUCCESS)
-                .status(200)
-                .message("번호표 취소 성공")
                 .build());
     }
 
@@ -458,14 +409,13 @@ public class AdminController {
 
     /**
      * 매장 가입 승인
-     * @param store_id 매장 고유 id 값
      * @param member_id 회원 id 값
      * @return http response
      */
     @ApiOperation(value = "매장 가입 승인[사이트 관리자]", notes = "가입 대기중인 매장을 승인합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/members/{member_id}/permit-join")
-    public ResponseEntity permitStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
+    @PostMapping("/storeAdmins/{member_id}/permit-join")
+    public ResponseEntity permitStore(@PathVariable("member_id") Long member_id) {
         adminService.permitStoreAdmin(member_id);
 
         return ResponseEntity.ok(Response.builder()
@@ -477,14 +427,13 @@ public class AdminController {
 
     /**
      * 매장 가입 승인 취소
-     * @param store_id 매장 고유 id 값
      * @param member_id 회원 id 값
      * @return http response
      */
     @ApiOperation(value = "매장 가입 취소[사이트 관리자]", notes = "가입 대기중인 매장의 승인을 취소합니다")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/stores/{store_id}/members/{member_id}/cancel-join")
-    public ResponseEntity rejectStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
+    @PostMapping("/storeAdmins/{member_id}/cancel-join")
+    public ResponseEntity rejectStore(@PathVariable("member_id") Long member_id) {
         adminService.cancelPermitStoreAdmin(member_id);
 
         return ResponseEntity.ok(Response.builder()

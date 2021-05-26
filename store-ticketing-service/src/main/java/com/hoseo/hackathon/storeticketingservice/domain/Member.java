@@ -1,10 +1,7 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 import com.hoseo.hackathon.storeticketingservice.domain.form.MemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
-import com.hoseo.hackathon.storeticketingservice.domain.status.ErrorStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.MemberRole;
-import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
+import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -37,7 +34,7 @@ public class Member extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;                            //가입 대기(VALID, INVALID) 탈퇴 (DELETE)
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private Set<MemberRole> roles = new HashSet<>();        //권한
 
@@ -67,7 +64,7 @@ public class Member extends BaseEntity{
      * 일반 회원 가입
      * @param memberForm 회원가입 form
      * @param encodingPassword 비밀번호 암호화
-     * @return
+     * @return Member Entity
      */
     public static Member createMember(MemberForm memberForm, String encodingPassword) {
         Member member = Member.builder()
@@ -87,7 +84,7 @@ public class Member extends BaseEntity{
      * @param storeAdminForm 회원가입 form
      * @param store 매장 entity
      * @param encodingPassword 비밀번호 암호화
-     * @return
+     * @return Member Entity
      */
     public static Member createStoreAdmin(StoreAdminForm storeAdminForm, Store store, String encodingPassword) {
         Member member = Member.builder()//회원
@@ -113,8 +110,10 @@ public class Member extends BaseEntity{
 
     //번호표 검증
     public void verifyTicket() {
-        if(getTicketList().size() > 0)
-            throw new DuplicateTicketingException("이미 번호표를 가지고 있습니다");
+        for(Ticket ticket : this.ticketList)
+            if (ticket.getStatus() == TicketStatus.VALID) {
+                throw new DuplicateTicketingException("이미 번호표를 가지고 있습니다");
+            }
     }
 
     //refreshToken 갱신
