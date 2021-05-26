@@ -136,7 +136,7 @@ public class StoreService {
         if (ticket.getStatus() == TicketStatus.INVALID)
             throw new IsAlreadyCompleteException("이미 체크처리 되었습니다");
 
-        ticket.changeStatusTicket(TicketStatus.INVALID);//번호표 상태 변경
+        ticket.changeStatusHoldingTicket(TicketStatus.INVALID);//번호표 상태 변경
     }
 
     /**
@@ -150,7 +150,7 @@ public class StoreService {
         if (ticket.getStatus() == TicketStatus.CANCEL)
             throw new IsAlreadyCompleteException("이미 취소처리 되었습니다");
 
-        ticket.changeStatusTicket(TicketStatus.CANCEL);//번호표 상태 변경
+        ticket.changeStatusHoldingTicket(TicketStatus.CANCEL);//번호표 상태 변경
     }
 
     /**

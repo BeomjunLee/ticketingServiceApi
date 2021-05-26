@@ -3,6 +3,7 @@ package com.hoseo.hackathon.storeticketingservice.domain;
 import com.hoseo.hackathon.storeticketingservice.domain.form.TicketForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.IsAlreadyCompleteException;
+import com.hoseo.hackathon.storeticketingservice.exception.IsNotHoldTicketStatusException;
 import lombok.*;
 
 import javax.jdo.annotations.Unique;
@@ -107,7 +108,19 @@ public class Ticket extends BaseEntity{
         super.changeCreatedDate(LocalDateTime.now());
         this.status = status;
     }
-    
+
+    //번호표 상태 변경
+    public void changeStatusTicket(TicketStatus status) {
+        this.status = status;
+    }
+
+    //번호표 상태 변경 (보류 번호표만)
+    public void changeStatusHoldingTicket(TicketStatus status) {
+        if(getStatus() == TicketStatus.HOLD)
+            this.status = status;
+        else
+            throw new IsNotHoldTicketStatusException("보류중인 번호표만 변경할 수 있습니다");
+    }
 
     //==연관관계 편의메서드
     public void setMember(Member member) {
@@ -115,16 +128,10 @@ public class Ticket extends BaseEntity{
         member.getTicketList().add(this);
 
     }
-    //==연관관계 편의메서드
     public void setStore(Store store) {
         this.store = store;
         store.getTicketList().add(this);
     }
 
-    //==비지니스 로직==
-    //번호표 상태 변경
-    public void changeStatusTicket(TicketStatus status) {
-        this.status = status;
-    }
 
 }

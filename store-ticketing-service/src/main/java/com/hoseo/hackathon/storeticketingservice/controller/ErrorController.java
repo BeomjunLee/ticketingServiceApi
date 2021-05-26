@@ -131,6 +131,21 @@ public class ErrorController {
     }
 
     /**
+     * 매장 보류 번호표 체크, 취소시 HOLD 상태가 아닌 경우
+     */
+    @ExceptionHandler(IsNotHoldTicketStatusException.class)
+    public ResponseEntity isNotHoldTicket(IsNotHoldTicketStatusException e) {
+        log.error(e.getMessage());
+        Response response = Response.builder()
+                .result(ResultStatus.FAIL)
+                .status(403)
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    /**
      * 아이디 중복 에러
      */
     @ExceptionHandler(DuplicateUsernameException.class)
