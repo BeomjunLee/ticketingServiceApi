@@ -44,16 +44,16 @@ public class StoreController {
     /**
      * [회원] 번호표 뽑기
      * @param store_id 매장 고유 id 값
-     * @param form 번호표 발급 form
+     * @param ticketForm 번호표 발급 form
      * @param principal jwt 요청 회원 정보
      * @return http response
      */
     @ApiOperation(value = "번호표 뽑기[회원]", notes = "매장의 번호표를 발급 받습니다")
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/{store_id}/tickets/new")
-    public ResponseEntity createTicket(@PathVariable("store_id") Long store_id, @Valid @RequestBody TicketForm form, Principal principal) {
+    public ResponseEntity createTicket(@PathVariable("store_id") Long store_id, @Valid @RequestBody TicketForm ticketForm, Principal principal) {
         Ticket ticket = Ticket.builder()
-                .peopleCount(form.getPeopleCount())
+                .peopleCount(ticketForm.getPeopleCount())
                 .build();
 
         storeService.createTicket(ticket, store_id, principal.getName());

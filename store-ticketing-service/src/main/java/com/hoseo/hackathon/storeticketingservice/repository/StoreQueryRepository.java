@@ -1,5 +1,6 @@
 package com.hoseo.hackathon.storeticketingservice.repository;
 
+import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.QStore;
 import com.hoseo.hackathon.storeticketingservice.domain.QTicket;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
@@ -31,30 +32,15 @@ public class StoreQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     /**
-     * 매장, 회원 조인 -> member_id, store_id 같은 스토어 객체 한번에 조회
-     * @param member_id
-     * @param store_id
-     * @return
-     */
-    public Optional<Store> findStoreJoinMember(Long member_id, Long store_id) {
-        Store findStore = queryFactory
-                .selectFrom(QStore.store)
-                .join(QStore.store.member, member).fetchJoin()
-                .where(QStore.store.id.eq(store_id),
-                        QStore.store.member.id.eq(member_id))
-                .fetchOne();
-        return Optional.ofNullable(findStore);
-    }
-
-    /**
      * 관리자의 매장 찾기
      * @param username 회원 아이디
      * @return
      */
-    public Optional<Store> findStoreJoinMemberByUsername(String username) {
+    public Optional<Store> findMemberJoinStoreByUsername(String username) {
         Store findStore = queryFactory
                 .selectFrom(store)
-                .join(store.member, member)
+                .distinct()
+                .join(store.memberList, member).fetchJoin()
                 .where(member.username.eq(username))
                 .fetchOne();
         return Optional.ofNullable(findStore);
@@ -71,7 +57,7 @@ public class StoreQueryRepository {
         QueryResults<StoreListDto> results = queryFactory
                 .select(new QStoreListDto(
                         store.id,
-                        store.member.id,
+                        store.memberList.get(0).id,
                         store.name,
                         store.phoneNum,
                         store.address,
@@ -79,7 +65,7 @@ public class StoreQueryRepository {
                         store.companyNumber
                 ))
                 .from(store)
-                .join(store.member, member)
+                .join(store.memberList, member)
                 .where(store.storeStatus.eq(storeStatus),
                         nameContain(condition.getName()),
                         phoneNumContain(condition.getPhoneNum()),

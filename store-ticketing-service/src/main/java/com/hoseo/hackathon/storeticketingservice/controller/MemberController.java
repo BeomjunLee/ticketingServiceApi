@@ -109,16 +109,7 @@ public class MemberController {
     @ApiOperation(value = "일반 회원 가입[누구나]", notes = "회원을 서비스에 가입시킵니다")
     @PostMapping("/new")
     public ResponseEntity signUpMember(@Valid @RequestBody MemberForm memberForm) {
-        Member member = Member.builder()
-                .username(memberForm.getUsername())
-                .password(memberForm.getPassword())
-                .name(memberForm.getName())
-                .phoneNum(memberForm.getPhoneNum())
-                .email(memberForm.getEmail())
-                .createdDate(LocalDateTime.now())
-                .deletedDate(null)  //탈퇴일은 가입시 null(재가입시 null 로 바꿔야돼서)
-                .build();
-        memberService.createMember(member);
+        memberService.createMember(memberForm);
 
         URI createUri = linkTo(MemberController.class).slash("new").toUri();
         return ResponseEntity.created(createUri).body(Response.builder()
@@ -136,26 +127,7 @@ public class MemberController {
     @ApiOperation(value = "매장 관리자 회원 가입[누구나]", notes = "매장 사장님을 서비스에 가입시킵니다")
     @PostMapping("/storeAdmin/new")
     public ResponseEntity signUpAdmin(@Valid @RequestBody StoreAdminForm storeAdminForm) {
-        Member member = Member.builder()//회원
-                .username(storeAdminForm.getMemberUsername())
-                .password(storeAdminForm.getMemberPassword())
-                .name(storeAdminForm.getMemberName())
-                .phoneNum(storeAdminForm.getMemberPhoneNum())
-                .email(storeAdminForm.getMemberEmail())
-                .createdDate(LocalDateTime.now())
-                .build();
-        Store store = Store.builder()//가게
-                .name(storeAdminForm.getStoreName())
-                .phoneNum(storeAdminForm.getStorePhoneNum())
-                .address(storeAdminForm.getStoreAddress())
-                //TODO 주소를 위도, 경도로 바꿔야됨
-                .latitude(storeAdminForm.getStoreLatitude())
-                .longitude(storeAdminForm.getStoreLongitude())
-                .companyNumber(storeAdminForm.getStoreCompanyNumber())
-                .member(member)
-                .build();
-
-        memberService.createStoreAdmin(member, store);
+        memberService.createStoreAdmin(storeAdminForm);
         URI createUri = linkTo(MemberController.class).slash("admin/new").toUri();
 
         return ResponseEntity.created(createUri).body(Response.builder()

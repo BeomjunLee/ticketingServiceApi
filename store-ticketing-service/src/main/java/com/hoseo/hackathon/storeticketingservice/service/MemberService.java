@@ -2,9 +2,7 @@ package com.hoseo.hackathon.storeticketingservice.service;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
-import com.hoseo.hackathon.storeticketingservice.domain.form.RefreshTokenForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateMemberForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
+import com.hoseo.hackathon.storeticketingservice.domain.form.*;
 import com.hoseo.hackathon.storeticketingservice.domain.response.LoginResponse;
 import com.hoseo.hackathon.storeticketingservice.domain.status.*;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
@@ -134,14 +132,13 @@ public class MemberService implements UserDetailsService {
     }
     
     /**
-     * 회원 수정(가게 관리자)
+     * 회원 수정(매장 관리자)
      */
     @Transactional
     public void updateStoreAdmin(String username, UpdateStoreAdminForm storeForm) {
-        Member member = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
-        Store store = storeRepository.findStoreJoinMemberByUsername(username).orElseThrow(() -> new NotFoundStoreException("해당되는 가게를 찾을수 없습니다"));
+        Member member = memberRepository.findByUsernameJoinStore(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
         member.changeMember(storeForm.getMember_name(), storeForm.getMember_phoneNum(), storeForm.getMember_email());
-        store.changeStore(storeForm.getStore_phoneNum(), storeForm.getStore_address());
+        member.getStore().changeStore(storeForm.getStore_phoneNum(), storeForm.getStore_address());
 
     }
 
@@ -149,34 +146,25 @@ public class MemberService implements UserDetailsService {
      * [회원] 회원가입
      */
     @Transactional //조회가 아니므로 Transactional
-    public Member createMember(Member member) {
-        validateDuplicateMember(member.getUsername()); //중복회원검증
-        member.addRole(MemberRole.USER);   //권한부여
-        member.changeMemberStatus(MemberStatus.VALID);  //일반 회원은 바로 가입
-        //비밀번호 encoding
-        member.encodingPassword(passwordEncoder.encode(member.getPassword()));
+    public Member createMember(MemberForm memberForm) {
+        validateDuplicateMember(memberForm.getUsername()); //중복회원검증
+        Member member = Member.createMember(memberForm, passwordEncoder.encode(memberForm.getPassword()));
         return memberRepository.save(member);
     }
 
     /**
-     * [관리자] 회원가입
+     * [매장 관리자] 회원가입
      */
     @Transactional //조회가 아니므로 Transactional
-    public void createStoreAdmin(Member member, Store store) {
-        validateDuplicateMember(member.getUsername()); //중복회원검증
-        validateDuplicateStore(store.getName());       //중복 가게명 검증
+    public Member createStoreAdmin(StoreAdminForm storeAdminForm) {
+        validateDuplicateMember(storeAdminForm.getMemberUsername()); //중복회원검증
+        validateDuplicateStore(storeAdminForm.getStoreName());       //중복 매장명 검증
 
-        member.addRole(MemberRole.STORE_ADMIN); //권한부여
-        member.changeMemberStatus(MemberStatus.INVALID); //가게 관리자는 가입 대기상태
-        //비밀번호 encoding
-        member.encodingPassword(passwordEncoder.encode(member.getPassword()));
-
-        store.changeErrorStatus(ErrorStatus.GOOD);
-        store.changeStoreTicketStatusClose(); //번호표 발급 비활성화
-        store.changeStoreStatus(StoreStatus.INVALID);  //승인 대기
-
-        memberRepository.save(member);
+        Store store = Store.createStore(storeAdminForm);
+        Member member = Member.createStoreAdmin(storeAdminForm, store, passwordEncoder.encode(storeAdminForm.getMemberPassword()));
+        Member savedMember = memberRepository.save(member);
         storeRepository.save(store);
+        return savedMember;
     }
 
     /**
@@ -186,7 +174,7 @@ public class MemberService implements UserDetailsService {
     public void createAdmin(Member member) {
         validateDuplicateMember(member.getUsername()); //중복회원검증
         member.addRole(MemberRole.ADMIN); //권한부여
-        member.changeMemberStatus(MemberStatus.ADMIN); //가게 관리자는 가입 대기상태
+        member.changeMemberStatus(MemberStatus.ADMIN); //매장 관리자는 가입 대기상태
         //비밀번호 encoding
         member.encodingPassword(passwordEncoder.encode(member.getPassword()));
         memberRepository.save(member);
@@ -203,7 +191,7 @@ public class MemberService implements UserDetailsService {
         //두 유저가 동시에 가입할 경우를 대비해서 DB 에도 유니크 제약조건을 걸어줘야함
     }
     /**
-     * 중복 가게명 검증
+     * 중복 매장명 검증
      */
     public void validateDuplicateStore(String name) {
         int findStores = storeRepository.countByName(name);
@@ -218,6 +206,13 @@ public class MemberService implements UserDetailsService {
      */
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
+    }
+
+    /**
+     * 매장 회원 정보 보기
+     */
+    public Member findByStoreUsername(String username) {
+        return memberRepository.findByUsernameJoinStore(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
     }
 
 }

@@ -1,7 +1,6 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
 
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import com.hoseo.hackathon.storeticketingservice.exception.IsAlreadyCompleteException;
 import lombok.*;
 
@@ -32,9 +31,8 @@ public class Ticket {
     @JoinColumn(name = "store_id")
     private Store store;                //store_id
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @Unique
     private Member member;
 
     @Builder
@@ -45,7 +43,7 @@ public class Ticket {
     /**
      * 번호표 발급
      */
-    public static void createTicket(Ticket ticket, Store store, Member member) {
+    public static Ticket createTicket(Ticket ticket, Store store, Member member) {
         store.verifyStoreStatus();  //승인되지 않은 매장 체크
         store.verifyStoreTicketStatus();//번호표 발급 활성화 상태 체크
         member.verifyTicket();//번호표 중복 뽑기 체크
@@ -62,6 +60,7 @@ public class Ticket {
         ticket.setMember(member);   //연관관계 세팅
 
         store.changeStoreByTicketing(store.getTotalWaitingCount());   //Store 갱신
+        return ticket;
     }
 
     /**
@@ -109,12 +108,13 @@ public class Ticket {
     //==연관관계 편의메서드
     public void setMember(Member member) {
         this.member = member;
-        member.changeTicket(this);
+        member.getTicketList().add(this);
 
     }
     //==연관관계 편의메서드
     public void setStore(Store store) {
         this.store = store;
+        store.getTicketList().add(this);
     }
 
     //==비지니스 로직==

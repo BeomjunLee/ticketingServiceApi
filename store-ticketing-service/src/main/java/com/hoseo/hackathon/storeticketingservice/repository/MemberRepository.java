@@ -15,16 +15,25 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUsername(String username);
 
+    @Query("select distinct m from Member m left join fetch m.ticketList where m.username = :username")
+    Optional<Member> findMemberJoinTicketByUsername(@Param("username") String username);
+
+    @Query("select m from Member m join fetch m.store where m.username = :username")
+    Optional<Member> findByUsernameJoinStore(@Param("username") String username);
+
+    @Query("select m from Member m join fetch m.store where m.id = :id")
+    Optional<Member> findByMemberIdJoinStore(@Param("id") Long id);
+
     Optional<Member> findMemberByUsernameAndRefreshToken(String username, String refreshToken);
 
     //전체 회원수
-    int countByStatus(MemberStatus status);
+    int countByMemberStatus(MemberStatus memberStatus);
     
     //아이디 중복검색
     int countByUsername(String username);
 
     //탈퇴한 회원들 검색
-    List<Member> findAllByStatus(MemberStatus status);
+    List<Member> findAllByMemberStatus(MemberStatus memberStatus);
 
     @Override
     void delete(Member entity);

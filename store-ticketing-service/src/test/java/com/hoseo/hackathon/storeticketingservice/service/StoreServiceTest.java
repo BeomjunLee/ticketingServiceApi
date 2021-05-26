@@ -2,15 +2,19 @@ package com.hoseo.hackathon.storeticketingservice.service;
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
 import com.hoseo.hackathon.storeticketingservice.domain.Ticket;
+import com.hoseo.hackathon.storeticketingservice.domain.form.MemberForm;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingException;
 import com.hoseo.hackathon.storeticketingservice.exception.NotFoundTicketException;
 import com.hoseo.hackathon.storeticketingservice.exception.StoreTicketIsCloseException;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 
@@ -37,30 +41,31 @@ class StoreServiceTest {
     @Autowired
     AdminService adminService;
     @Autowired EntityManager em;
+    @Autowired
+    StoreQueryRepository storeQueryRepository;
 
-//    @BeforeAll
+    @BeforeAll
     public static void createStore(@Autowired MemberService memberService,
                                    @Autowired AdminService adminService,
                                    @Autowired StoreService storeService) {
-        Member storeAdmin = Member.builder()
-                .username("storeadmin")
-                .password("1234")
+        StoreAdminForm storeAdminForm = StoreAdminForm.builder()
+                .memberUsername("storeadmin")
+                .memberPassword("1234")
+                .storeName("식당")
                 .build();
-        Store store = Store.builder()
-                .name("식당")
-                .member(storeAdmin)
-                .build();
-        memberService.createStoreAdmin(storeAdmin, store);//가게 관리자 + 가게 생성
+        memberService.createStoreAdmin(storeAdminForm);//매장 관리자 + 매장 생성
 
         for (int i = 1; i <= 10; i++) {
-            Member member = Member.builder()
+            MemberForm member = MemberForm.builder()
                     .username("test" + i)
                     .password("1234")
                     .build();
             memberService.createMember(member);     //일반 회원 생성
         }
-        adminService.permitStoreAdmin(storeAdmin.getId(), store.getId());   //사이트 관리자가 가입 승인
-        storeService.openTicket(storeAdmin.getUsername()); //번호표 발급 허용
+
+        Member member = memberService.findByStoreUsername("storeadmin");
+        adminService.permitStoreAdmin(member.getId());   //사이트 관리자가 가입 승인
+        storeService.openTicket(member.getUsername()); //번호표 발급 허용
     }
     
     @Test
@@ -72,29 +77,29 @@ class StoreServiceTest {
         //when
         Store findStore = storeRepository.findByName("식당").get();
         
-        storeService.createTicket(ticket, findStore.getId(), "test");   //티켓 생성
+        storeService.createTicket(ticket, findStore.getId(), "test1");   //티켓 생성
         //then
         assertEquals(1, findStore.getTotalWaitingCount());//총 대기인원 1명
         assertEquals(5, findStore.getTotalWaitingTime());//총 대기 시간 5분
 
-        Ticket findTicket = storeService.findMyTicket("test");
+        Ticket findTicket = storeService.findMyTicket("test1");
 
         assertEquals(5, findTicket.getPeopleCount());   // 인원수
         assertEquals(1, findTicket.getWaitingNum());    //총 대기인원 1명
         assertEquals(5, findTicket.getWaitingTime());   //총 대기 시간 5분
 
         assertThrows(DuplicateTicketingException.class, () ->{
-            storeService.createTicket(ticket, findStore.getId(), "test");   //번호표 중복 생성시 오류
+            storeService.createTicket(ticket, findStore.getId(), "test1");   //번호표 중복 생성시 오류
         });
 
         storeService.closeTicket("storeadmin"); //번호표 비활성화
         assertThrows(StoreTicketIsCloseException.class, () ->{
-            storeService.createTicket(ticket, findStore.getId(), "test");   //비활성화시 번호표 생성 오류
+            storeService.createTicket(ticket, findStore.getId(), "test1");   //비활성화시 번호표 생성 오류
         });
 
-        storeService.cancelTicket("test");  //번호표 취소
+        storeService.cancelTicket("test1");  //번호표 취소
         assertThrows(NotFoundTicketException.class, () ->{
-            storeService.findMyTicket("test");  //번호표 찾기 오류
+            storeService.findMyTicket("test1");  //번호표 찾기 오류
         });
         assertEquals(0, findStore.getTotalWaitingCount());//총 대기인원 0명
         assertEquals(0, findStore.getTotalWaitingTime());//총 대기 시간 0분
@@ -107,13 +112,18 @@ class StoreServiceTest {
 
     @Test
     @DisplayName("번호표 뽑기")
+    @Rollback(value = false)
     void createTicket() {
-        Store store = storeRepository.findStoreJoinMemberByUsername("storeadmin2").get();
+        em.clear();
+        Store store = storeQueryRepository.findMemberJoinStoreByUsername("storeadmin").get();
 
-        Ticket ticket = Ticket.builder()
-                .peopleCount(5)
-                .build();
-        storeService.createTicket(ticket, store.getId(), "test");
+        for (int i = 1; i < 10; i++) {
+
+            Ticket ticket = Ticket.builder()
+                    .peopleCount(5)
+                    .build();
+            storeService.createTicket(ticket, store.getId(), "test"+i);
+        }
     }
 
     @Test
@@ -122,9 +132,9 @@ class StoreServiceTest {
         //given
         em.clear();
         //when
-        Store store = storeRepository.findStoreJoinMemberByUsername("storeadmin").get();
+        Store store = storeQueryRepository.findMemberJoinStoreByUsername("storeadmin").get();
         //then
         System.out.println("store.getName() = " + store.getName());
-        System.out.println("store.getMember().getName() = " + store.getMember().getUsername());
+        System.out.println("store.getMember().getName() = " + store.getMemberList().get(0).getUsername());
     }
 }

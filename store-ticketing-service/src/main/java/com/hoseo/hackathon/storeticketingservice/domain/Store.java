@@ -1,6 +1,6 @@
 package com.hoseo.hackathon.storeticketingservice.domain;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.domain.status.ErrorStatus;
-import com.hoseo.hackathon.storeticketingservice.domain.status.MemberStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.NotAuthorizedStoreException;
@@ -8,6 +8,8 @@ import com.hoseo.hackathon.storeticketingservice.exception.StoreTicketIsCloseExc
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -40,22 +42,42 @@ public class Store {
 
     private LocalDateTime createdDate;        //생성일
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;              //member_id
+    @OneToMany(mappedBy = "store")
+    private List<Member> memberList = new ArrayList<>();
 
-    //==연관관계 메서드==
-    public void setMember(Member member) {
-        this.member = member;
-    }
+    @OneToMany(mappedBy = "store")
+    private List<Ticket> ticketList = new ArrayList<>();
+
+
+
 
     //=========================비지니스로직=====================
+
+    /**
+     * 매장 가입
+     * @param storeAdminForm 매장 폼
+     */
+    public static Store createStore(StoreAdminForm storeAdminForm) {
+        Store store = Store.builder()
+                .name(storeAdminForm.getStoreName())
+                .phoneNum(storeAdminForm.getStorePhoneNum())
+                .address(storeAdminForm.getStoreAddress())
+                .latitude(storeAdminForm.getStoreLatitude())
+                .longitude(storeAdminForm.getStoreLongitude())
+                .companyNumber(storeAdminForm.getStoreCompanyNumber())
+                .avgWaitingTimeByOne(5)
+                .errorStatus(ErrorStatus.GOOD)
+                .storeTicketStatus(StoreTicketStatus.CLOSE)
+                .storeStatus(StoreStatus.INVALID)
+                .build();
+        store.memberList = new ArrayList<>();
+        return store;
+    }
 
     /**
      * 매장 관리자 가입 승인
      */
     public void permitStoreAdmin() {
-        member.changeMemberStatus(MemberStatus.VALID);
         changeStoreStatus(StoreStatus.VALID);
         changeCreatedDate(LocalDateTime.now());
     }
@@ -64,7 +86,6 @@ public class Store {
      * 매장 관리자 가입 승인 취소
      */
     public void cancelPermitStoreAdmin() {
-        member.changeMemberStatus(MemberStatus.INVALID);
         changeStoreStatus(StoreStatus.INVALID);
     }
 

@@ -2,25 +2,35 @@ package com.hoseo.hackathon.storeticketingservice.service;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.Store;
+import com.hoseo.hackathon.storeticketingservice.domain.form.MemberForm;
+import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateMemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateStoreNameException;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateUsernameException;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.swing.text.html.parser.Entity;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Transactional
+@Rollback(value = false)
 class MemberServiceTest {
     @Autowired
     MemberService memberService;
@@ -30,10 +40,14 @@ class MemberServiceTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     StoreRepository storeRepository;
+    @Autowired
+    EntityManager em;
+    @Autowired
+    StoreQueryRepository storeQueryRepository;
 
     @Test
     public void 로그인_체크() {
-        Member member = Member.builder()
+        MemberForm member = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .build();
@@ -42,7 +56,7 @@ class MemberServiceTest {
 
     @Test
     public void 비밀번호_변경() {
-        Member member = Member.builder()
+        MemberForm member = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .build();
@@ -53,22 +67,28 @@ class MemberServiceTest {
 
     @Test
     public void 회원가입() {
-        Member member = Member.builder()
-                .username("test")
-                .password("1234")
-                .build();
-        Member savedMember = memberService.createMember(member);
-        assertEquals(member, memberRepository.findById(savedMember.getId()).get());
+        for (int i = 0; i < 10; i++) {
+            MemberForm member = MemberForm.builder()
+                    .username("test"+i)
+                    .password("1234")
+                    .build();
+            Member savedMember = memberService.createMember(member);
+        }
+        em.flush();
+        em.clear();
+
+        List<Member> memberList = memberRepository.findAll();
+        Assertions.assertThat(memberList.size()).isEqualTo(10);
     }
 
     @Test
     public void 중복_회원가입() {
-        Member member1 = Member.builder()
+        MemberForm member1 = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .build();
 
-        Member member2 = Member.builder()
+        MemberForm member2 = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .build();
@@ -80,53 +100,45 @@ class MemberServiceTest {
 
     @Test
     public void 가게관리자_회원가입_정보보기() {
-        Member member = Member.builder()
-                .username("test")
-                .password("1234")
+        StoreAdminForm storeAdminForm = StoreAdminForm.builder()
+                .memberUsername("test")
+                .memberPassword("1234")
+                .storeName("식당")
                 .build();
-        Store store = Store.builder()
-                .name("식당")
-                .member(member)
-                .build();
-        memberService.createStoreAdmin(member, store);
-        assertEquals(member, memberRepository.findById(member.getId()).get());
+        memberService.createStoreAdmin(storeAdminForm);
+        Member member = memberRepository.findByUsername("test").get();
+        assertEquals(storeAdminForm.getMemberUsername(), member.getUsername());
 
-        Store findStore = storeRepository.findById(store.getId()).get();
-        assertEquals(store, findStore);
+        Store store = storeRepository.findByName("식당").get();
+        assertEquals(storeAdminForm.getStoreName(), store.getName());
 
         assertEquals("승인 대기", store.getStoreStatus().getStatus());
     }
 
     @Test
     public void 가게관리자_중복회원가입() {
-        Member member1 = Member.builder()
-                .username("test")
-                .password("1234")
-                .build();
-        Store store1 = Store.builder()
-                .name("식당")
-                .member(member1)
+        StoreAdminForm storeAdminForm1 = StoreAdminForm.builder()
+                .memberUsername("test")
+                .memberPassword("1234")
+                .storeName("식당")
                 .build();
 
-        Member member2 = Member.builder()
-                .username("test2")
-                .password("1234")
+        StoreAdminForm storeAdminForm2 = StoreAdminForm.builder()
+                .memberUsername("test2")
+                .memberPassword("1234")
+                .storeName("식당2")
                 .build();
-        Store store2 = Store.builder()
-                .name("식당")
-                .member(member2)
-                .build();
-        memberService.createStoreAdmin(member1, store1);
+        memberService.createStoreAdmin(storeAdminForm1);
 
         assertThrows(DuplicateStoreNameException.class, () ->{
-            memberService.createStoreAdmin(member2, store2);
+            memberService.createStoreAdmin(storeAdminForm2);
         });
     }
     
     @Test
     public void 회원_수정() throws Exception{
         //given
-        Member member = Member.builder()
+        MemberForm member = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .name("테스트")
@@ -134,7 +146,7 @@ class MemberServiceTest {
                 .email("a@a")
                 .build();
         //when
-        memberService.createMember(member);
+        Member savedMember = memberService.createMember(member);
 
         UpdateMemberForm form = UpdateMemberForm.builder()
                 .name("테스트1")
@@ -144,7 +156,7 @@ class MemberServiceTest {
 
         memberService.updateMember(member.getUsername(), form);
 
-        Member findMember = memberRepository.findById(member.getId()).get();
+        Member findMember = memberRepository.findById(savedMember.getId()).get();
         //then
         assertEquals(form.getName(), findMember.getName());
         assertEquals(form.getPhoneNum(), findMember.getPhoneNum());
@@ -154,20 +166,17 @@ class MemberServiceTest {
     @Test
     public void 가게관리자_수정() throws Exception{
         //given
-        Member member = Member.builder()
-                .username("test")
-                .password("1234")
-                .name("테스트")
-                .phoneNum("1")
-                .email("a@a")
+        StoreAdminForm storeAdminForm = StoreAdminForm.builder()
+                .memberUsername("test")
+                .memberPassword("1234")
+                .memberName("테스트")
+                .memberPhoneNum("1")
+                .memberEmail("a@a")
+                .storeName("식당")
+                .storePhoneNum("1")
+                .storeAddress("주소")
                 .build();
-        Store store = Store.builder()
-                .name("식당")
-                .phoneNum("1")
-                .address("주소")
-                .member(member)
-                .build();
-        memberService.createStoreAdmin(member, store);
+        memberService.createStoreAdmin(storeAdminForm);
         //when
         UpdateStoreAdminForm form = UpdateStoreAdminForm.builder()
                 .member_name("테스트1")
@@ -176,10 +185,10 @@ class MemberServiceTest {
                 .store_phoneNum("2")
                 .store_address("주소1")
                 .build();
-        memberService.updateStoreAdmin(member.getUsername(), form);
+        memberService.updateStoreAdmin(storeAdminForm.getMemberUsername(), form);
 
-        Member findMember = memberRepository.findById(member.getId()).get();
-        Store findStore = storeRepository.findByMember_Id(member.getId()).get();
+        Member findMember = memberRepository.findByUsername(storeAdminForm.getMemberUsername()).get();
+        Store findStore = storeQueryRepository.findMemberJoinStoreByUsername(findMember.getUsername()).get();
         //then
 
 
@@ -189,5 +198,7 @@ class MemberServiceTest {
         assertEquals(form.getStore_phoneNum(), findStore.getPhoneNum());
         assertEquals(form.getStore_address(), findStore.getAddress());
     }
+
+
 
 }

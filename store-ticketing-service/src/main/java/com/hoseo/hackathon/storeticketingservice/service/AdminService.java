@@ -297,7 +297,7 @@ public class AdminService {
      * @return 가입 승인된 전체 회원 수
      */
     public int totalMemberCount() {
-        return memberRepository.countByStatus(MemberStatus.VALID);
+        return memberRepository.countByMemberStatus(MemberStatus.VALID);
     }
 
     /**
@@ -351,13 +351,12 @@ public class AdminService {
      */
     @Transactional
     public void deleteMember(Long member_id) {
-        Member member = memberRepository.findById(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 회원을 찾을수 없습니다"));
+        Member member = memberRepository.findByMemberIdJoinStore(member_id).orElseThrow(() -> new UsernameNotFoundException("해당되는 회원을 찾을수 없습니다"));
         if (member.getRoles().contains(MemberRole.USER)) {
             member.changeMemberStatus(MemberStatus.DELETE);
         } else if (member.getRoles().contains(MemberRole.STORE_ADMIN)) {
-            Store store = storeRepository.findByMember_Id(member_id).orElseThrow(() -> new NotFoundStoreException("등록된 가게를 찾을수 없습니다"));
             member.changeMemberStatus(MemberStatus.DELETE);
-            store.changeStoreStatus(StoreStatus.DELETE);
+            member.getStore().changeStoreStatus(StoreStatus.DELETE);
         }
     }
 
@@ -366,7 +365,7 @@ public class AdminService {
      */
     @Transactional
     public void deleteMemberWeekPast() {
-        List<Member> memberList = memberRepository.findAllByStatus(MemberStatus.DELETE);
+        List<Member> memberList = memberRepository.findAllByMemberStatus(MemberStatus.DELETE);
         if(memberList == null) throw new NoSuchElementException("삭제할 회원이 없습니다");
         memberList.stream().forEach(member ->{
             Period period = Period.between(member.getDeletedDate().toLocalDate(), LocalDateTime.now().toLocalDate());
@@ -382,23 +381,23 @@ public class AdminService {
     /**
      * 매장 관리자 가입 승인 (시간넣어야됨)
      * @param member_id 회원 고유 id 값
-     * @param store_id 매장 고유 id 값
      */
     @Transactional
-    public void permitStoreAdmin(Long member_id, Long store_id) {
-        Store store = storeQueryRepository.findStoreJoinMember(member_id, store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
-        store.permitStoreAdmin();
+    public void permitStoreAdmin(Long member_id) {
+        Member member = memberQueryRepository.findStoreJoinMember(member_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
+        member.changeMemberStatus(MemberStatus.VALID);
+        member.getStore().permitStoreAdmin();
     }
 
     /**
      * 매장 관리자 가입 승인 취소
      * @param member_id 회원 고유 id 값
-     * @param store_id 매장 고유 id 값
      */
     @Transactional
-    public void cancelPermitStoreAdmin(Long member_id, Long store_id) {
-        Store store = storeQueryRepository.findStoreJoinMember(member_id, store_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
-        store.cancelPermitStoreAdmin();
+    public void cancelPermitStoreAdmin(Long member_id) {
+        Member member = memberQueryRepository.findStoreJoinMember(member_id).orElseThrow(() -> new NotFoundStoreException("등록된 매장을 찾을수 없습니다"));
+        member.changeMemberStatus(MemberStatus.INVALID);
+        member.getStore().cancelPermitStoreAdmin();
     }
 
 
@@ -413,7 +412,7 @@ public class AdminService {
         Page<Store> stores = storeRepository.findAllByErrorStatus(ErrorStatus.ERROR, pageable);
         return stores.map(store -> StoreErrorListDto.builder()
                 .store_id(store.getId())
-                .member_id(store.getMember().getId())
+                .member_id(store.getMemberList().get(0).getId())    // 매장관리자 1명
                 .name(store.getName())
                 .phoneNum(store.getPhoneNum())
                 .address(store.getAddress())
@@ -431,7 +430,7 @@ public class AdminService {
         Page<Store> stores = storeRepository.findAllByErrorStatusOrderByTotalWaitingCountDesc(ErrorStatus.ERROR, pageable);
         return stores.map(store -> StoreErrorListDto.builder()
                 .store_id(store.getId())
-                .member_id(store.getMember().getId())
+                .member_id(store.getMemberList().get(0).getId())
                 .name(store.getName())
                 .phoneNum(store.getPhoneNum())
                 .address(store.getAddress())

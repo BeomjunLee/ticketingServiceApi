@@ -466,7 +466,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/stores/{store_id}/members/{member_id}/permit-join")
     public ResponseEntity permitStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
-        adminService.permitStoreAdmin(member_id, store_id);
+        adminService.permitStoreAdmin(member_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
@@ -485,7 +485,7 @@ public class AdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/stores/{store_id}/members/{member_id}/cancel-join")
     public ResponseEntity rejectStore(@PathVariable("store_id") Long store_id, @PathVariable("member_id") Long member_id) {
-        adminService.cancelPermitStoreAdmin(member_id, store_id);
+        adminService.cancelPermitStoreAdmin(member_id);
 
         return ResponseEntity.ok(Response.builder()
                 .result(ResultStatus.SUCCESS)
