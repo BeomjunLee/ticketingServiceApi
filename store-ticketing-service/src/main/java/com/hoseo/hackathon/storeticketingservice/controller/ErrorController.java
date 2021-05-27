@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Slf4j
 @ControllerAdvice
 public class ErrorController {
@@ -41,7 +43,7 @@ public class ErrorController {
 //        }
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(400)
+                .status(BAD_REQUEST.value())
 //                .message(builder.toString())
                 .message(fieldErrors.get(0).getDefaultMessage())    //첫번째 에러만
                 .build();
@@ -56,7 +58,7 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(409)
+                .status(CONFLICT.value())
                 .message(e.getMessage())
                 .build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
@@ -69,10 +71,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(404)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
     /**
      * 매장 찾기 실패
@@ -82,10 +84,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(404)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
     /**
      * 유저 찾기 실패
@@ -95,10 +97,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(404)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
@@ -109,10 +111,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(404)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
@@ -123,11 +125,11 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(403)
+                .status(CONFLICT.value())
                 .message(e.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     /**
@@ -138,11 +140,11 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(403)
+                .status(CONFLICT.value())
                 .message(e.getMessage())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     /**
@@ -153,10 +155,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(400)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
@@ -167,24 +169,24 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(400)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
-     * 이미 처리됨
+     * 작업들이 이미 처리돼서 충돌
      */
     @ExceptionHandler(IsAlreadyCompleteException.class)
     public ResponseEntity isAlreadyComplete(IsAlreadyCompleteException e) {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(208)
+                .status(CONFLICT.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(response);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     /**
@@ -195,10 +197,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(401)
+                .status(FORBIDDEN.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     /**
@@ -209,10 +211,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(404)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
@@ -223,10 +225,10 @@ public class ErrorController {
         log.error(e.getMessage());
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(400)
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
@@ -236,7 +238,7 @@ public class ErrorController {
     public ResponseEntity badCredentials(Exception e) {
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(BAD_REQUEST.value())
                 .message("로그인 실패")
                 .build();
         return ResponseEntity.badRequest().body(response);
@@ -249,9 +251,9 @@ public class ErrorController {
     public ResponseEntity invalidRefreshToken(Exception e) {
         Response response = Response.builder()
                 .result(ResultStatus.FAIL)
-                .status(HttpStatus.UNAUTHORIZED.value())
+                .status(BAD_REQUEST.value())
                 .message(e.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 }
