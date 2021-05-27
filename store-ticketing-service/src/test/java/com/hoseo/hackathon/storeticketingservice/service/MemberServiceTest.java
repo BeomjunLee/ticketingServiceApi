@@ -9,12 +9,10 @@ import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminFor
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateStoreNameException;
 import com.hoseo.hackathon.storeticketingservice.exception.DuplicateUsernameException;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.StoreQueryRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.querydsl.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +20,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.swing.text.html.parser.Entity;
 
 import java.util.List;
 

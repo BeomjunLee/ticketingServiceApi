@@ -10,7 +10,7 @@ import com.hoseo.hackathon.storeticketingservice.exception.DuplicateTicketingExc
 import com.hoseo.hackathon.storeticketingservice.exception.NotFoundTicketException;
 import com.hoseo.hackathon.storeticketingservice.exception.StoreTicketIsCloseException;
 import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.StoreQueryRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.querydsl.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
 import com.hoseo.hackathon.storeticketingservice.repository.TicketRepository;
 import org.junit.jupiter.api.*;

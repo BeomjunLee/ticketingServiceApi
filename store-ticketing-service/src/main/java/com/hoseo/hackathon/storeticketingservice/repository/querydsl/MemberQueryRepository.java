@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.repository;
+package com.hoseo.hackathon.storeticketingservice.repository.querydsl;
 
 import com.hoseo.hackathon.storeticketingservice.domain.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.dto.MemberListDto;

@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.repository;
+package com.hoseo.hackathon.storeticketingservice.repository.querydsl;
 import com.hoseo.hackathon.storeticketingservice.domain.QTicket;
 import com.hoseo.hackathon.storeticketingservice.domain.Ticket;
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;

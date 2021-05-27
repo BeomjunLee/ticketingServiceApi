@@ -10,6 +10,9 @@ import com.hoseo.hackathon.storeticketingservice.domain.status.StoreTicketStatus
 import com.hoseo.hackathon.storeticketingservice.domain.status.TicketStatus;
 import com.hoseo.hackathon.storeticketingservice.exception.*;
 import com.hoseo.hackathon.storeticketingservice.repository.*;
+import com.hoseo.hackathon.storeticketingservice.repository.querydsl.MemberQueryRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.querydsl.StoreQueryRepository;
+import com.hoseo.hackathon.storeticketingservice.repository.querydsl.TicketQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
