@@ -80,7 +80,7 @@ public class Member extends BaseEntity{
     }
 
     /**
-     * 일반 회원 가입
+     * 매장 관리자 가입
      * @param storeAdminForm 회원가입 form
      * @param store 매장 entity
      * @param encodingPassword 비밀번호 암호화
