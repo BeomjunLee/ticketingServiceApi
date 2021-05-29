@@ -31,10 +31,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0Iiwicm9sZXMiOiJST0xFX
 ###회원 번호표 취소 테스트
 DELETE http://localhost:8080/api/members/tickets
 Content-Type: application/json
-Authorization: bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMjE1MDcwOSwidXNlcm5hbWUiOiJ0ZXN0In0.Xf1PYM6gt8gTRMqrYcILMKspy6Ars7LhbW2aXJeDTvs
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlXyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGVlYmVvbWp1biIsImV4cCI6MTYxMjE1MDcwOSwidXNlcm5hbWUiOiJ0ZXN0In0.Xf1PYM6gt8gTRMqrYcILMKspy6Ars7LhbW2aXJeDTvs
 
-###
-GET http://localhost:8080/api/admin/members?page=1&size=2
+### 회원 정보 조회
+GET http://localhost:8080/api/members/me
 Content-Type: application/json
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdG9yZWFkbWluIiwicm9sZXMiOiJST0xFX1NUT1JFX0FETUlOIiwiZXhwIjoxNjIyMjE3MTc2fQ.0bSKFJpoS0lvB6jQjCz-qxLXpC32xLJDfhT5j4gWLa0
 

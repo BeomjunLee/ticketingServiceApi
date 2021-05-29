@@ -18,6 +18,8 @@
 
 <img src="https://i.ibb.co/svFzH2Z/2021-05-03-11-42-27.png"><br><br>
 
+## DB 설계
+<center><img src="https://i.ibb.co/rt8w9gr/2021-05-30-12-23-21.png"></center>
 ## API 문서
 <img src="https://i.ibb.co/8gXfcxH/2021-05-03-11-56-28.png" width="1000"><br>
 <img src="https://i.ibb.co/3f1WHnP/2021-05-27-5-50-13.png" width="1000"><br>
