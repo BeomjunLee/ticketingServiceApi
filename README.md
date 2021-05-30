@@ -20,17 +20,17 @@
 
 ## DB 설계
 ### ERD
-<img src="https://i.ibb.co/ws063MZ/2021-05-30-5-54-09.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098425-d345d880-c170-11eb-8298-0a5427aa1c72.png"><br>
 
 ### Entity Mapping
-<img src="https://i.ibb.co/rt8w9gr/2021-05-30-12-23-21.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098432-e0fb5e00-c170-11eb-9538-c29b5f771b21.png"><br>
 
 ## API 문서
-<img src="https://i.ibb.co/8gXfcxH/2021-05-03-11-56-28.png" width="1000"><br>
-<img src="https://i.ibb.co/3f1WHnP/2021-05-27-5-50-13.png" width="1000"><br>
-<img src="https://i.ibb.co/NxXnb9r/2021-05-27-5-50-30.png" width="1000"><br>
-<img src="https://i.ibb.co/s5dLbbH/2021-05-27-5-49-46.png" width="1000"><br>
-<img src="https://i.ibb.co/Ky1ZW4R/2021-05-27-5-49-57.png" width="1000"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098471-1e5feb80-c171-11eb-940f-b330952acf16.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098513-4b140300-c171-11eb-85a8-b6156f67d052.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098485-2c157100-c171-11eb-8d31-0ab7a31bb4ac.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098456-0ab48500-c171-11eb-8cfe-f82bbfb56ad8.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120098451-00928680-c171-11eb-9c68-2453863c8365.png"><br>
 
 
 
