@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.service;
+package com.hoseo.hackathon.storeticketingservice.optimization;
 import com.hoseo.hackathon.storeticketingservice.domain.admin.service.AdminService;
 import com.hoseo.hackathon.storeticketingservice.domain.member.entity.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.store.entity.Store;
@@ -10,9 +10,9 @@ import com.hoseo.hackathon.storeticketingservice.domain.ticket.dto.form.TicketFo
 import com.hoseo.hackathon.storeticketingservice.domain.member.service.MemberService;
 import com.hoseo.hackathon.storeticketingservice.domain.ticket.entity.enums.TicketStatus;
 import com.hoseo.hackathon.storeticketingservice.domain.ticket.exception.DuplicateTicketingException;
+import com.hoseo.hackathon.storeticketingservice.domain.ticket.service.TicketService;
 import com.hoseo.hackathon.storeticketingservice.global.common.exception.NotFoundTicketException;
 import com.hoseo.hackathon.storeticketingservice.domain.store.exception.StoreTicketIsCloseException;
-import com.hoseo.hackathon.storeticketingservice.domain.ticket.service.TicketService;
 import com.hoseo.hackathon.storeticketingservice.domain.member.repository.MemberRepository;
 import com.hoseo.hackathon.storeticketingservice.domain.store.repository.StoreQueryRepository;
 import com.hoseo.hackathon.storeticketingservice.domain.store.repository.StoreRepository;
@@ -24,7 +24,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,7 +83,7 @@ class TicketServiceTest {
         adminService.permitStoreAdmin(member2.getId());   //사이트 관리자가 가입 승인
         storeService.openTicket(member2.getUsername()); //번호표 발급 허용
     }
-    
+
     @Test
     public void 번호표뽑기_중복뽑기_번호표조회_CLOSE_상태뽑기불가_번호표취소() throws Exception{
         //given

@@ -75,7 +75,7 @@ public class Member extends BaseEntity {
                 .email(memberForm.getEmail())
                 .memberStatus(MemberStatus.VALID)
                 .build();
-        member.addRole(MemberRole.USER);   //권한부여
+        member.addRole(MemberRole.USER);
         return member;
     }
 
@@ -87,7 +87,7 @@ public class Member extends BaseEntity {
      * @return Member Entity
      */
     public static Member createStoreAdmin(StoreAdminForm storeAdminForm, Store store, String encodingPassword) {
-        Member member = Member.builder()//회원
+        Member member = Member.builder()
                 .username(storeAdminForm.getMemberUsername())
                 .password(encodingPassword)
                 .name(storeAdminForm.getMemberName())
@@ -95,7 +95,7 @@ public class Member extends BaseEntity {
                 .email(storeAdminForm.getMemberEmail())
                 .memberStatus(MemberStatus.INVALID)
                 .build();
-        member.addRole(MemberRole.STORE_ADMIN); //권한부여
+        member.addRole(MemberRole.STORE_ADMIN);
 
         member.setStore(store);
         return member;

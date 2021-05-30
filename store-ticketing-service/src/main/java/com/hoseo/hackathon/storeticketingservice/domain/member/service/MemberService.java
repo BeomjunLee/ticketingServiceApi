@@ -129,19 +129,21 @@ public class MemberService implements UserDetailsService {
      * 회원 수정(일반)
      */
     @Transactional
-    public void updateMember(String username, UpdateMemberForm memberForm) {
+    public Member updateMember(String username, UpdateMemberForm memberForm) {
         Member member = memberRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
         member.changeMember(memberForm.getName(), memberForm.getPhoneNum(), memberForm.getEmail());
+        return member;
     }
     
     /**
      * 회원 수정(매장 관리자)
      */
     @Transactional
-    public void updateStoreAdmin(String username, UpdateStoreAdminForm storeForm) {
+    public Member updateStoreAdmin(String username, UpdateStoreAdminForm storeForm) {
         Member member = memberRepository.findMemberJoinStoreByUsername(username).orElseThrow(() -> new UsernameNotFoundException("해당되는 유저를 찾을수 없습니다"));
         member.changeMember(storeForm.getMember_name(), storeForm.getMember_phoneNum(), storeForm.getMember_email());
         member.getStore().changeStore(storeForm.getStore_phoneNum(), storeForm.getStore_address());
+        return member;
 
     }
 

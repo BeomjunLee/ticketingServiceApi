@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.service;
+package com.hoseo.hackathon.storeticketingservice.optimization;
 
 import com.hoseo.hackathon.storeticketingservice.domain.admin.service.AdminService;
 import com.hoseo.hackathon.storeticketingservice.domain.member.entity.Member;

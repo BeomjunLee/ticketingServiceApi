@@ -1,4 +1,4 @@
-package com.hoseo.hackathon.storeticketingservice.service;
+package com.hoseo.hackathon.storeticketingservice.optimization;
 import com.hoseo.hackathon.storeticketingservice.domain.member.entity.Member;
 import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.MemberForm;
 import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.StoreAdminForm;
