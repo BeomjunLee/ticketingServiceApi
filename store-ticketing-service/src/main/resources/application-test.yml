@@ -1,0 +1,34 @@
+#H2
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test;
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+#JPA
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  data:
+    web:
+      pageable:
+        default-page-size: 10
+    #    :open-in-view: false
+
+jwt:
+  header: Authorization
+  secretKey : leebeomjunleebeomjunleebeomjunleebeomjunleebeomjunleebeomjun
+  #1h
+  accessToken-valid-seconds : 600
+  #24h
+  refreshToken-valid-seconds : 86400

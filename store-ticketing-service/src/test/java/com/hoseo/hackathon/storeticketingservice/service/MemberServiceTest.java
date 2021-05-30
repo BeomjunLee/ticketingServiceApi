@@ -1,33 +1,30 @@
 package com.hoseo.hackathon.storeticketingservice.service;
-
-import com.hoseo.hackathon.storeticketingservice.domain.Member;
-import com.hoseo.hackathon.storeticketingservice.domain.Store;
-import com.hoseo.hackathon.storeticketingservice.domain.form.MemberForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.StoreAdminForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateMemberForm;
-import com.hoseo.hackathon.storeticketingservice.domain.form.UpdateStoreAdminForm;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateStoreNameException;
-import com.hoseo.hackathon.storeticketingservice.exception.DuplicateUsernameException;
-import com.hoseo.hackathon.storeticketingservice.repository.MemberRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.querydsl.StoreQueryRepository;
-import com.hoseo.hackathon.storeticketingservice.repository.StoreRepository;
+import com.hoseo.hackathon.storeticketingservice.domain.member.entity.Member;
+import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.MemberForm;
+import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.StoreAdminForm;
+import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.UpdateMemberForm;
+import com.hoseo.hackathon.storeticketingservice.domain.member.dto.form.UpdateStoreAdminForm;
+import com.hoseo.hackathon.storeticketingservice.domain.member.service.MemberService;
+import com.hoseo.hackathon.storeticketingservice.domain.member.exception.DuplicateStoreNameException;
+import com.hoseo.hackathon.storeticketingservice.domain.member.exception.DuplicateUsernameException;
+import com.hoseo.hackathon.storeticketingservice.domain.member.repository.MemberRepository;
+import com.hoseo.hackathon.storeticketingservice.domain.store.entity.Store;
+import com.hoseo.hackathon.storeticketingservice.domain.store.repository.StoreQueryRepository;
+import com.hoseo.hackathon.storeticketingservice.domain.store.repository.StoreRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
+@ActiveProfiles("test")
 class MemberServiceTest {
     @Autowired
     MemberService memberService;
@@ -43,12 +40,14 @@ class MemberServiceTest {
     StoreQueryRepository storeQueryRepository;
 
     @Test
-    public void 로그인_체크() {
+    public void 로그인_성공() {
         MemberForm member = MemberForm.builder()
                 .username("test")
                 .password("1234")
                 .build();
-        memberService.createMember(member);
+        Member savedMember = memberService.createMember(member);
+        Assertions.assertThat(savedMember.getUpdatedDate()).isNotNull();
+        Assertions.assertThat(savedMember.getCreatedDate()).isNotNull();
     }
 
     @Test
@@ -63,7 +62,7 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 회원가입() {
+    public void 회원조회_성능최적화() {
         for (int i = 0; i < 10; i++) {
             MemberForm member = MemberForm.builder()
                     .username("test"+i)

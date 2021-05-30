@@ -1,0 +1,7 @@
+package com.hoseo.hackathon.storeticketingservice.domain.member.exception;
+
+public class DuplicateStoreNameException extends RuntimeException{
+    public DuplicateStoreNameException(String message) {
+        super(message);
+    }
+}
