@@ -19,7 +19,11 @@
 <img src="https://i.ibb.co/svFzH2Z/2021-05-03-11-42-27.png"><br><br>
 
 ## DB 설계
-<center><img src="https://i.ibb.co/rt8w9gr/2021-05-30-12-23-21.png"></center><br>
+### ERD
+<img src="https://i.ibb.co/ws063MZ/2021-05-30-5-54-09.png"><br>
+
+### Entity Mapping
+<img src="https://i.ibb.co/rt8w9gr/2021-05-30-12-23-21.png"><br>
 
 ## API 문서
 <img src="https://i.ibb.co/8gXfcxH/2021-05-03-11-56-28.png" width="1000"><br>
