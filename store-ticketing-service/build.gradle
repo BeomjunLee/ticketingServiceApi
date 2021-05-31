@@ -4,10 +4,6 @@ plugins {
     id 'java'
     //querydsl
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
-
-    //react 연동
-//    id 'com.github.node-gradle.node' version '2.2.3'
-
 }
 
 group = 'com.hoseo.hackathon'
@@ -24,46 +20,6 @@ configurations {
 repositories {
     mavenCentral()
 }
-
-//react 연동==
-//node{
-//    version = '14.15.4'
-//
-//    download = true
-//
-//    workDir = file("${project.projectDir}/src/main/frontend/nodejs")
-//
-//    npmWorkDir = file("${project.projectDir}/src/main/frontend/npm")
-//
-//    nodeModulesDir = file("${project.projectDir}/src/main/frontend")
-//}
-//
-//task npmInstallDependencies(type:NpmTask){
-//    dependsOn 'npmSetup'
-//    execOverrides{
-//        it.ignoreExitValue = true
-//        it.workingDir = 'src/main/frontend'
-//    }
-//}
-//
-//task npmBuild(type: NpmTask){
-//    dependsOn 'npmInstallDependencies'
-//    execOverrides{
-//        it.workingDir = 'src/main/frontend'
-//    }
-//    args = ['run', 'build']
-//}
-//
-//task copyFrontendToBuild(type: Copy){
-//    dependsOn 'npmBuild'
-//    from "$projectDir/src/main/frontend/build/"
-//    into "$buildDir/resources/main/static"
-//}
-//
-//processResources{
-//    dependsOn 'copyFrontendToBuild'
-//}
-//react 연동 끝==
 
 dependencies {
     //jdbc
