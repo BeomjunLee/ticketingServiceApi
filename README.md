@@ -1,4 +1,3 @@
-
 ## 대기 번호표 관리 서비스
 <img src="https://user-images.githubusercontent.com/69130921/116804258-5e26b980-ab58-11eb-8b20-af9ca681f76b.png"><br>
 
@@ -21,10 +20,11 @@
 
 ## DB 설계
 ### ERD
-<img src="https://user-images.githubusercontent.com/69130921/120098425-d345d880-c170-11eb-8298-0a5427aa1c72.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120164556-ae676900-c235-11eb-9c5e-d52173796e53.png"><br>
+
 
 ### Entity Mapping
-<img src="https://user-images.githubusercontent.com/69130921/120098432-e0fb5e00-c170-11eb-9538-c29b5f771b21.png"><br>
+<img src="https://user-images.githubusercontent.com/69130921/120165050-20d84900-c236-11eb-83e2-f814135e397c.png"><br>
 
 ## API 문서
 <img src="https://user-images.githubusercontent.com/69130921/120098471-1e5feb80-c171-11eb-940f-b330952acf16.png"><br>
