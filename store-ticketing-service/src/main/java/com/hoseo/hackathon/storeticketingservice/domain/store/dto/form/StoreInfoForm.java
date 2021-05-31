@@ -1,13 +1,15 @@
 package com.hoseo.hackathon.storeticketingservice.domain.store.dto.form;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 /**
  * 매장 상태정보 수정
  */

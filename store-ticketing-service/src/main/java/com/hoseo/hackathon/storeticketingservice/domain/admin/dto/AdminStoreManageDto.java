@@ -1,17 +1,14 @@
 package com.hoseo.hackathon.storeticketingservice.domain.admin.dto;
 
 import com.hoseo.hackathon.storeticketingservice.domain.store.dto.StoreListDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 /**
  * 매장 관리 dto (admin 용)
  */

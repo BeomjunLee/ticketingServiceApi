@@ -3,15 +3,13 @@ package com.hoseo.hackathon.storeticketingservice.domain.store.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoseo.hackathon.storeticketingservice.domain.store.entity.enums.StoreStatus;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 /**
  * 매장 리스트 dto
  */

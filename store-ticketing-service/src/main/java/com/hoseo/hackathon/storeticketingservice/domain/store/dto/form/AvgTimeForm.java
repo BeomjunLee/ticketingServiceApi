@@ -1,15 +1,15 @@
 package com.hoseo.hackathon.storeticketingservice.domain.store.dto.form;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AvgTimeForm {
 
     @NotNull(message = "1이상 정수만 입력가능합니다")

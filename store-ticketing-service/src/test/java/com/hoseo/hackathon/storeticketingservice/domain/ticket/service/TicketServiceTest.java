@@ -85,7 +85,6 @@ public class TicketServiceTest {
         assertThat(savedTicket.getPeopleCount()).isEqualTo(ticketForm.getPeopleCount());
         assertThat(savedTicket.getWaitingTime()).isEqualTo(5);
         assertThat(savedTicket.getWaitingNum()).isEqualTo(1);
-        assertThat(savedTicket.getStatus()).isEqualTo(TicketStatus.VALID);
     }
 
     @Test

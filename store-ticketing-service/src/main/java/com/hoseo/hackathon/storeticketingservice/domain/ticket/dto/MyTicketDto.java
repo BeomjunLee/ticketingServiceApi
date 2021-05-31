@@ -1,15 +1,12 @@
 package com.hoseo.hackathon.storeticketingservice.domain.ticket.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyTicketDto {
     private String name;                //가게 이름
     private String phoneNum;            //가게 전화번호

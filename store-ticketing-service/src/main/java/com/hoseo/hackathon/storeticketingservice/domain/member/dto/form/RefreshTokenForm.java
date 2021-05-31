@@ -1,12 +1,10 @@
 package com.hoseo.hackathon.storeticketingservice.domain.member.dto.form;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshTokenForm {
     private String grantType;
     private String refreshToken;

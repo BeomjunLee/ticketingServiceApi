@@ -81,7 +81,7 @@ class AdminServiceTest {
                     .build();
             Member savedMember = memberService.createMember(member); //회원 생성
             TicketForm ticket = TicketForm.builder().peopleCount(i).build();
-            Ticket savedTicket = ticketService.createTicket(ticket, findStore.getId(), savedMember.getUsername()); //번호표 발급
+            ticketService.createTicket(ticket, findStore.getId(), savedMember.getUsername()); //번호표 발급
 
         }
     }

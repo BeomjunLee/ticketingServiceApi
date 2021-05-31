@@ -5,9 +5,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)  //기본 생성자 protected
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class AdminMemberDto {
     @JsonIgnore

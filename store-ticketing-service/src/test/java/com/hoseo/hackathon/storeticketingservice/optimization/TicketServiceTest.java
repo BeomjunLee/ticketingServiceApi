@@ -214,7 +214,8 @@ class TicketServiceTest {
                 .build();
         ticketService.createTicket(ticketForm, store2.getId(), "test2");// 번호표 뽑기
         //when
-        Ticket ticket = ticketService.createTicket(ticketForm, store.getId(), "test1");// 번호표 뽑기
+        ticketService.createTicket(ticketForm, store.getId(), "test1");// 번호표 뽑기
+        Ticket ticket = ticketService.findMyTicket("test1");
         Long ticketId = ticket.getId();
         em.flush();
         em.clear();
@@ -240,7 +241,8 @@ class TicketServiceTest {
                 .build();
         ticketService.createTicket(ticketForm, store2.getId(), "test2");// 번호표 뽑기
         //when
-        Ticket ticket = ticketService.createTicket(ticketForm, store.getId(), "test1");// 번호표 뽑기
+        ticketService.createTicket(ticketForm, store.getId(), "test1");// 번호표 뽑기
+        Ticket ticket = ticketService.findMyTicket("test1");
         Long ticketId = ticket.getId();
         em.flush();
         em.clear();

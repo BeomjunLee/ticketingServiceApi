@@ -1,18 +1,15 @@
 package com.hoseo.hackathon.storeticketingservice.domain.admin.dto.form;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminUpdateMemberForm {
     @NotBlank(message = "아이디를 입력해주세요")
     @ApiModelProperty(position = 1, value = "아이디", example = "updatedUser")

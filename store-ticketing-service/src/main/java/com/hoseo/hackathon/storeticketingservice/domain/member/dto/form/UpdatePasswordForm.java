@@ -1,13 +1,14 @@
 package com.hoseo.hackathon.storeticketingservice.domain.member.dto.form;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UpdatePasswordForm {
     @NotBlank(message = "현재 비밀번호를 입력해주세요")
     @ApiModelProperty(position = 1, value = "현재 비밀번호", example = "1234")

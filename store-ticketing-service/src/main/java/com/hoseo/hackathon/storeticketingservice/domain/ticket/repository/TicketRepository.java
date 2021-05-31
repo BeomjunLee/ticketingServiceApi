@@ -32,7 +32,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     //취소한 사람의 뒤의 번호표를 - 1
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("update Ticket t set t.waitingNum = t.waitingNum - 1, t.waitingTime = (t.waitingNum - 1) * :avgWaitingTime " +
             "where t.waitingNum > :waitingNum and t.status = :status and t.store.id = :store_id")
     void updateTicketsMinus1(@Param("status") TicketStatus status, @Param("waitingNum") int waitingNum, @Param("avgWaitingTime") int avgWaitingTime, @Param("store_id")Long store_id);

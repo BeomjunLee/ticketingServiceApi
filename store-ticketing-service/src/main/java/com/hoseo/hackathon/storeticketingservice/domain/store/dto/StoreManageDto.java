@@ -6,10 +6,10 @@ import lombok.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)  //기본 생성자 protected
+@Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 /**
  * 매장 관리 dto
  */

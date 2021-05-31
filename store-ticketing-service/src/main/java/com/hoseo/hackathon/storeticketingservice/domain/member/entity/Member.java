@@ -148,4 +148,5 @@ public class Member extends BaseEntity {
     public void changeMemberStatus(MemberStatus memberStatus) {   //가입상태 변경
         this.memberStatus = memberStatus;
     }
+
 }

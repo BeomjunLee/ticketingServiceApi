@@ -2,13 +2,14 @@ package com.hoseo.hackathon.storeticketingservice.domain.admin.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoseo.hackathon.storeticketingservice.domain.member.entity.MemberRole;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AdminStoreAdminDto {
     @JsonIgnore
     private Long member_id;
